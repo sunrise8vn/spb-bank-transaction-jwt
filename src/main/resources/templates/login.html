@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <title>Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/resources/css/sweetalert2.min.css">
+    <link rel="stylesheet" type="text/css" href="/resources/css/custom-dropdown.css">
+    <link rel="stylesheet" type="text/css" href="/resources/css/blue.css">
+    <link rel="stylesheet" type="text/css" href="/resources/css/login.css">
+</head>
+<body>
+
+<div class="hero">
+    <div class="form-box">
+        <div class="button-box">
+            <div id="btnBox"></div>
+            <button type="button" class="toggle-btn login-box-btn">Login</button>
+            <button type="button" class="toggle-btn register-box-btn">Register</button>
+        </div>
+        <div class="social-icons">
+            <img src="/resources/images/fb.png" alt="Facebook">
+            <img src="/resources/images/tw.png" alt="Twitter">
+            <img src="/resources/images/gp.png" alt="Google">
+        </div>
+        <form id="frmLogin" class="input-group">
+            <input type="text" id="usnLogin" class="input-field" placeholder="Email">
+            <input type="password" id="pwdLogin" class="input-field" placeholder="Password">
+            <div class="checkbox icheck">
+                <label>
+                    <input type="checkbox" class="" value="remember"><span> Remember login</span>
+                </label>
+            </div>
+            <button type="button" id="btnLogin" class="btn submit-btn">Login</button>
+        </form>
+
+        <form id="frmRegister" class="input-group">
+            <div class="role">
+                <div class="custom-select-wrapper" style="width: 100%">
+                    <div class="custom-select">
+                        <div class="custom-select__trigger">
+                            <span>Role group</span>
+                            <div class="arrow"></div>
+                        </div>
+                        <div class="custom-options">
+                            <span class='custom-option' data-value='1'>Admin role</span>
+                            <span class='custom-option' data-value='2'>User role</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <input type="text" id="usnReg" class="input-field" placeholder="Email">
+            <input type="password" id="pwdReg" class="input-field" placeholder="Password">
+            <div class="checkbox icheck">
+                <label>
+                    <input type="checkbox" class="" value="remember"><span> I agree to the Terms & Conditions</span>
+                </label>
+            </div>
+            <button type="button" id="btnRegister" class="btn submit-btn">Register</button>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript" src="/resources/js/jquery-3.6.0.js"></script>
+<!-- <script type="text/javascript" src="js/jquery-ui-1.12.1.js"></script> -->
+<!--<script type="text/javascript" src="/resources/js/bootstrap-4.4.1.min.js"></script>-->
+<script type="text/javascript" src="/resources/js/notify-0.4.1.min.js"></script>
+<script type="text/javascript" src="/resources/js/icheck.min.js"></script>
+<script type="text/javascript" src="/resources/js/app.js"></script>
+
+<script type="text/javascript">
+    let page = {
+        urls: {
+            register: App.BASE_URL_AUTH + "/register",
+            login: App.BASE_URL_AUTH + "/login",
+        },
+        element: {},
+        commands: {},
+        initializeControlEvent: () => {}
+    }
+
+    page.element.frmLogin = $("#frmLogin");
+    page.element.usnLogin = $("#usnLogin");
+    page.element.pwdLogin = $("#pwdLogin");
+
+    page.element.frmRegister = $("#frmRegister");
+    page.element.usnReg = $("#usnReg");
+    page.element.pwdReg = $("#pwdReg");
+
+    page.element.btnBox = $("#btnBox");
+    page.element.loginBoxBtn = $(".login-box-btn");
+    page.element.registerBoxBtn = $(".register-box-btn");
+    page.element.btnLogin = $("#btnLogin");
+    page.element.btnRegister = $("#btnRegister");
+    page.element.frmResSelect = $("#frmRegister .role .custom-select");
+    page.element.frmResSelectSpan = $("#frmRegister .role .custom-select__trigger span");
+    page.element.frmRegOpt = $("#frmRegister .role .custom-option");
+    page.element.frmRegOpts = $("#frmRegister .role .custom-options");
+    page.element.frmResOptWrapper = $("#frmRegister .role .custom-select-wrapper")
+
+    page.commands.switchLoginForm = () => {
+        page.element.frmLogin.css("left", "50px");
+        page.element.frmRegister.css("left", "450px");
+        page.element.btnBox.css("left", 0);
+        setTimeout(function () {
+            page.element.loginBoxBtn.css("color", "#fff");
+            page.element.registerBoxBtn.css("color", "#000");
+        }, 100);
+    }
+
+    page.commands.switchRegisterForm = () => {
+        page.element.frmLogin.css("left", "-400px");
+        page.element.frmRegister.css("left", "50px");
+        page.element.btnBox.css("left", "132px");
+
+        setTimeout(function () {
+            page.element.loginBoxBtn.css("color", "#000");
+            page.element.registerBoxBtn.css("color", "#fff");
+        }, 100);
+    }
+
+    page.commands.login = () => {
+        let user = {
+            username: page.element.usnLogin.val(),
+            password: page.element.pwdLogin.val()
+        }
+
+        $.ajax({
+            type: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            url: page.urls.login,
+            data: JSON.stringify(user)
+        }).done((resp) => {
+            $.notify("Logged in successfully !", "success");
+
+            setTimeout(function () {
+                window.location.href = "/";
+            }, 1000);
+
+        }).fail( function() {
+            $.notify("The account or password is incorrect, please check the information again", "error");
+        });
+    }
+
+    page.commands.register = () => {
+        let user = {
+            username: page.element.usnReg.val(),
+            password: page.element.pwdReg.val(),
+            role: {
+                id: page.element.frmRegOpts.find(".selected").data("value"),
+                code: page.element.frmRegOpts.find(".selected").text()
+            }
+        }
+
+        $.ajax({
+            type: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            url: page.urls.register,
+            data: JSON.stringify(user)
+        }).done((resp) => {
+            $.notify("Successful account registration !", "success");
+
+            setTimeout(function () {
+                page.element.usnLogin.val(page.element.usnReg.val());
+                page.element.pwdLogin.val(page.element.pwdReg.val());
+                page.commands.switchLoginForm();
+            }, 1000);
+
+        }).fail( function(jqXHR) {
+            page.element.frmLogin[0].reset();
+
+            if (jqXHR.responseJSON) {
+                if (jqXHR.responseJSON.message) {
+                    $.notify(jqXHR.responseJSON.message, "error");
+                } else {
+                    $.each( jqXHR.responseJSON, function( key, value ) {
+                        $.notify(value, "error");
+                    });
+                }
+            } else {
+                $.notify("Something went wrong, please try again", "error");
+            }
+
+        });
+    }
+
+    page.initializeControlEvent = () => {
+        page.element.loginBoxBtn.on("click", function () {
+            page.commands.switchLoginForm();
+        });
+
+        page.element.registerBoxBtn.on("click", function () {
+            page.commands.switchRegisterForm();
+        });
+
+        page.element.frmRegOpt.on("click", function () {
+            let role_name = $(this).html();
+            page.element.frmResSelectSpan.html(role_name);
+            page.element.frmRegOpts.find(".selected").removeClass("selected");
+            $(this).addClass("selected");
+        });
+
+        page.element.frmResOptWrapper.on("click", function () {
+            page.element.frmResSelect.toggleClass("open");
+        });
+
+        page.element.btnLogin.on("click", function() {
+            page.commands.login();
+        });
+
+        page.element.btnRegister.on("click", function() {
+            page.commands.register();
+        });
+
+        $(function () {
+            $('input').iCheck({
+                checkboxClass: 'icheckbox_square-blue',
+                radioClass: 'iradio_square-blue',
+                increaseArea: '20%'
+            });
+        });
+
+        $(document).on("click", function (e) {
+            const select = document.querySelector('#frmRegister .role .custom-select')
+            if (!select.contains(e.target)) {
+                select.classList.remove('open');
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        page.initializeControlEvent();
+    });
+
+</script>
+
+
+</body>
+</html>
