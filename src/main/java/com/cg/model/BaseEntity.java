@@ -21,7 +21,7 @@ public abstract class BaseEntity {
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
-    private Date createdAt = new Date();
+    private Date createdAt;
 
     @CreatedBy
     @Column(name = "created_by")

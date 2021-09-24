@@ -1,7 +1,16 @@
 *{
 	margin: 0;
 	padding: 0;
+	box-sizing: border-box;
 	font-family: sans-serif;
+}
+
+.show {
+	display: block;
+}
+
+.hide {
+	display: none;
 }
 
 .hero {
@@ -47,7 +56,6 @@
 	width: 125px;
 	height: 100%;
 	background: linear-gradient(to right, #ff105f, #ffad06);
-	/* background: linear-gradient(to right, #ff105f, #ffad06, #ff105f); */
 	border-radius: 30px;
 	transition: .5s;
 }
@@ -98,12 +106,10 @@
 	cursor: pointer;
 	display: block;
 	margin: auto;
-	/* background-image: linear-gradient(to right, #ff105f, #ffad06); */
 	background-image: linear-gradient(to right, #ff105f, #ffad06, #ff105f);
 	border: 0;
 	outline: none;
 	border-radius: 30px;
-
 }
 
 .btn {

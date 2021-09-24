@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -61,9 +62,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.httpBasic().authenticationEntryPoint(restServicesEntryPoint());
 
         http.authorizeRequests()
-                .antMatchers("/", "/api/auth/login", "/api/auth/register", "/login").permitAll()
+                .antMatchers("/", "/api/auth/login", "/api/auth/register", "/login", "/logout").permitAll()
                 .antMatchers("/transfers").hasAnyAuthority("ADMIN")
-                .antMatchers("/resources/**",
+                .antMatchers("/resources/**", "/assets/**",
                         "/v2/api-docs",
                         "/swagger-resources/configuration/ui",
                         "/configuration/ui",
@@ -81,8 +82,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .defaultSuccessUrl("/")
-                .and().logout().logoutUrl("/logout").logoutSuccessUrl("/login").deleteCookies("JWT").invalidateHttpSession(true)
-                .and().csrf().disable();
+                .and()
+                .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login")
+//                .logoutSuccessHandler(new CookieClearingLogoutHandler("JWT"))
+                .deleteCookies("JWT")
+                .invalidateHttpSession(true)
+                .and()
+                .csrf().disable();
 
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling().accessDeniedHandler(customAccessDeniedHandler());

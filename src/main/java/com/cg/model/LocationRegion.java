@@ -35,10 +35,10 @@ public class LocationRegion {
     @Column(nullable = false)
     private String districtName;
 
-    @Column(nullable = false)
+    @Column
     private String wardId;
 
-    @Column(nullable = false)
+    @Column
     private String wardName;
 
     @Column(nullable = false)

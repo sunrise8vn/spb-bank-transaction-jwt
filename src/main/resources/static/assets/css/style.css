@@ -182,3 +182,29 @@ label.error {
 input.error {
     border: solid 1px red;
 }
+
+.profile-dropdown {
+    display: none;
+    transform: translate3d(-10px, 65px, 0px);
+    top: 0;
+    right: 0;
+}
+
+.dropdown-item:hover, .dropdown-item:focus {
+    color: #ffffff;
+    background-color: #4caf50;
+}
+
+.nav-user img {
+    height: 32px;
+    width: 32px;
+}
+
+.dropdown-header h6 {
+    font-weight: 700;
+    color: #626773;
+}
+
+.dropdown-header a span {
+    margin-left: 5px;
+}

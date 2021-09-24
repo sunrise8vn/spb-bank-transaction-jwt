@@ -15,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -64,15 +63,7 @@ public class CustomerAPI {
         Optional<CustomerDTO> customerDTO = Optional.ofNullable(customerService.findCustomerDTOById(id));
 
         if (customerDTO.isPresent()) {
-            long locationRegionId = customerDTO.get().getLocationRegion().getId();
-            LocationRegionDTO locationRegionDTO = locationRegionService.findLocationRegionDTOById(locationRegionId);
-
-            Map<String, Object> result = new HashMap<>();
-            result.put("customer", customerDTO.get());
-            result.put("locationRegion", locationRegionDTO);
-
-            return new ResponseEntity<>(result, HttpStatus.OK);
-
+            return new ResponseEntity<>(customerDTO.get(), HttpStatus.OK);
         } else {
             throw new ResourceNotFoundException("No customer found with the Id: " + id);
         }
@@ -113,9 +104,8 @@ public class CustomerAPI {
 
         Iterable<RecipientDTO> recipientDTOS = customerService.findAllRecipientDTOByIdWithOutSenderAndDeletedIsFalse(id);
 
-        Map<String, Object> result = new HashMap<>();
-
         if (transferDTO.isPresent()) {
+            Map<String, Object> result = new HashMap<>();
             result.put("transferDTO", transferDTO.get());
             result.put("recipientDTOS", recipientDTOS);
 

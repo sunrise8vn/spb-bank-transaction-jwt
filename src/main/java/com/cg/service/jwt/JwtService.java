@@ -13,7 +13,7 @@ import java.util.Date;
 @Component
 @Service
 public class JwtService {
-    private static final String SECRET_KEY = "CoLenNheBanThanHoiCoLenNheBanThanHoiCoLenNheBanThanHoi";
+    private static final String SECRET_KEY = "GoiTenToiNheBanThanHoiCoToiLuonCungChiaSotDeRoiTaLaiCoThemNiemTin";
     public static final long JWT_TOKEN_VALIDITY = 1000L;
     private static final Logger logger = LoggerFactory.getLogger(JwtService.class.getName());
 

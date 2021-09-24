@@ -12,6 +12,38 @@
                     <h1>Transfer money Information</h1>
                 </div>
                 <div class="col-sm-6">
+                    <ul class="list-unstyled topnav-menu float-right mb-0" style="float: right; margin-top: 5px;">
+                        <li class="dropdown notification-list">
+                            <a class="nav-link dropdown-toggle nav-user mr-0" data-toggle="dropdown" href="#">
+                                <img src="/assets/images/avatar_1.jpg" alt="user-image" class="rounded-circle">
+                                <span class="pro-user-name ml-1">
+                                    <i class="mdi mdi-chevron-down"></i>
+                                </span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right profile-dropdown">
+                                <div class="dropdown-header">
+                                    <h6 class="text-overflow m-0">Welcome !</h6>
+                                </div>
+
+                                <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                    <i class="fa fa-user"></i>
+                                    <span>Profile</span>
+                                </a>
+
+                                <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                    <i class="fa fa-cog"></i>
+                                    <span>Settings</span>
+                                </a>
+
+                                <div class="dropdown-divider"></div>
+
+                                <a href="/logout" class="dropdown-item notify-item">
+                                    <i class="fa fa-sign-out"></i>
+                                    <span>Logout</span>
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
                     <a href="/customers" class="btn btn-outline-light"><i class="fa fa-list" aria-hidden="true"></i> <span>Customer list</span></a>
                 </div>
             </div>
@@ -57,7 +89,7 @@
         </div>
     </div>
 
-    <script type="text/javascript" src="/resources/js/app.js"></script>
+    <script type="text/javascript" src="/assets/js/app.js"></script>
 
     <script>
         let page = {
@@ -67,7 +99,8 @@
             },
             element: {},
             loadData: {},
-            commands: {}
+            commands: {},
+            initializeControlEvent: () => {}
         }
 
         page.element.tempTransfer = $("#tempTransfer");
@@ -110,9 +143,21 @@
             });
         }
 
+        page.initializeControlEvent = () => {
+            $("a.nav-user").on("click", function (event) {
+                event.stopPropagation();
+                $(".profile-dropdown").slideToggle(250);
+            });
+
+            $(document).on("click", function () {
+                $(".profile-dropdown").hide();
+            });
+        }
+
         $(document).ready(function () {
             page.loadData.getAllTransfers();
             page.loadData.getSumFeesAmount();
+            page.initializeControlEvent();
         });
     </script>
 

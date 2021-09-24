@@ -3,11 +3,14 @@
 <head>
     <title>Login</title>
     <meta charset="UTF-8">
+    <link rel="shortcut icon" href="/assets/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="/resources/css/sweetalert2.min.css">
-    <link rel="stylesheet" type="text/css" href="/resources/css/custom-dropdown.css">
-    <link rel="stylesheet" type="text/css" href="/resources/css/blue.css">
-    <link rel="stylesheet" type="text/css" href="/resources/css/login.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/sweetalert2.min.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/custom-dropdown.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/blue.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/login.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/tooltip.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/flying.css">
 </head>
 <body>
 
@@ -18,10 +21,14 @@
             <button type="button" class="toggle-btn login-box-btn">Login</button>
             <button type="button" class="toggle-btn register-box-btn">Register</button>
         </div>
-        <div class="social-icons">
-            <img src="/resources/images/fb.png" alt="Facebook">
-            <img src="/resources/images/tw.png" alt="Twitter">
-            <img src="/resources/images/gp.png" alt="Google">
+        <div class="social-icons tooltip">
+            <img src="/assets/images/fb.png" alt="Facebook">
+            <img src="/assets/images/tw.png" alt="Twitter">
+            <img src="/assets/images/gp.png" alt="Google">
+            <img src="/assets/images/fly.png" class="airplane" alt="Plane">
+            <span class="tooltiptext">
+                Airplane driving relax. Press the C key to change planes when on the runway. Press the BACKSPACE key to go back.
+            </span>
         </div>
         <form id="frmLogin" class="input-group">
             <input type="text" id="usnLogin" class="input-field" placeholder="Email">
@@ -61,12 +68,23 @@
     </div>
 </div>
 
-<script type="text/javascript" src="/resources/js/jquery-3.6.0.js"></script>
-<!-- <script type="text/javascript" src="js/jquery-ui-1.12.1.js"></script> -->
-<!--<script type="text/javascript" src="/resources/js/bootstrap-4.4.1.min.js"></script>-->
-<script type="text/javascript" src="/resources/js/notify-0.4.1.min.js"></script>
-<script type="text/javascript" src="/resources/js/icheck.min.js"></script>
-<script type="text/javascript" src="/resources/js/app.js"></script>
+<section>
+    <div class="clouds">
+        <img src="/assets/images/plane/cloudx.png" alt="" style="--i:1;">
+        <img src="/assets/images/plane/cloudx.png" alt="" style="--i:2;">
+    </div>
+    <div class="clouds clouds2">
+        <img src="/assets/images/plane/cloudx.png" alt="" style="--i:1;">
+        <img src="/assets/images/plane/cloudx.png" alt="" style="--i:2;">
+    </div>
+    <div class="runway"></div>
+    <img src="/assets/images/plane/plane_a380.png" class="plane" alt="">
+</section>
+
+<script type="text/javascript" src="/assets/js/jquery-3.6.0.js"></script>
+<script type="text/javascript" src="/assets/js/notify-0.4.1.min.js"></script>
+<script type="text/javascript" src="/assets/js/icheck.min.js"></script>
+<script type="text/javascript" src="/assets/js/app.js"></script>
 
 <script type="text/javascript">
     let page = {
@@ -76,8 +94,12 @@
         },
         element: {},
         commands: {},
-        initializeControlEvent: () => {}
+        initializeControlEvent: () => {
+        }
     }
+
+    let arrPlane = ["plane_b777", "plane_a380"];
+    let curIdx = 0;
 
     page.element.frmLogin = $("#frmLogin");
     page.element.usnLogin = $("#usnLogin");
@@ -92,8 +114,8 @@
     page.element.registerBoxBtn = $(".register-box-btn");
     page.element.btnLogin = $("#btnLogin");
     page.element.btnRegister = $("#btnRegister");
-    page.element.frmResSelect = $("#frmRegister .role .custom-select");
-    page.element.frmResSelectSpan = $("#frmRegister .role .custom-select__trigger span");
+    page.element.frmRegSelect = $("#frmRegister .role .custom-select");
+    page.element.frmRegSelectSpan = $("#frmRegister .role .custom-select__trigger span");
     page.element.frmRegOpt = $("#frmRegister .role .custom-option");
     page.element.frmRegOpts = $("#frmRegister .role .custom-options");
     page.element.frmResOptWrapper = $("#frmRegister .role .custom-select-wrapper")
@@ -140,7 +162,7 @@
                 window.location.href = "/";
             }, 1000);
 
-        }).fail( function() {
+        }).fail(function () {
             $.notify("The account or password is incorrect, please check the information again", "error");
         });
     }
@@ -172,14 +194,14 @@
                 page.commands.switchLoginForm();
             }, 1000);
 
-        }).fail( function(jqXHR) {
+        }).fail(function (jqXHR) {
             page.element.frmLogin[0].reset();
 
             if (jqXHR.responseJSON) {
                 if (jqXHR.responseJSON.message) {
                     $.notify(jqXHR.responseJSON.message, "error");
                 } else {
-                    $.each( jqXHR.responseJSON, function( key, value ) {
+                    $.each(jqXHR.responseJSON, function (key, value) {
                         $.notify(value, "error");
                     });
                 }
@@ -201,37 +223,61 @@
 
         page.element.frmRegOpt.on("click", function () {
             let role_name = $(this).html();
-            page.element.frmResSelectSpan.html(role_name);
+            page.element.frmRegSelectSpan.html(role_name);
             page.element.frmRegOpts.find(".selected").removeClass("selected");
             $(this).addClass("selected");
         });
 
-        page.element.frmResOptWrapper.on("click", function () {
-            page.element.frmResSelect.toggleClass("open");
-        });
-
-        page.element.btnLogin.on("click", function() {
+        page.element.btnLogin.on("click", function () {
             page.commands.login();
         });
 
-        page.element.btnRegister.on("click", function() {
+        page.element.btnRegister.on("click", function () {
             page.commands.register();
         });
 
-        $(function () {
-            $('input').iCheck({
-                checkboxClass: 'icheckbox_square-blue',
-                radioClass: 'iradio_square-blue',
-                increaseArea: '20%'
-            });
+        page.element.frmResOptWrapper.on("click", function (event) {
+            event.stopPropagation();
+            page.element.frmRegSelect.toggleClass("open");
         });
 
-        $(document).on("click", function (e) {
-            const select = document.querySelector('#frmRegister .role .custom-select')
-            if (!select.contains(e.target)) {
-                select.classList.remove('open');
+        $('input').iCheck({
+            checkboxClass: 'icheckbox_square-blue',
+            radioClass: 'iradio_square-blue',
+            increaseArea: '20%'
+        });
+
+        $(document).on("click", function () {
+            page.element.frmRegSelect.removeClass("open");
+        });
+
+        $(".tooltip .airplane").on("click", function () {
+            $(".hero").addClass("hide");
+            $("section").css("display", "flex");
+        });
+
+        // AirPlane Start
+        $(document).on('keydown', function(e) {
+            if(e.keyCode === 8) {
+                $(".hero").removeClass("hide");
+                $("section").css("display", "none");
+            }
+
+            if(e.keyCode === 67) {
+                if ($("img.plane").width() === 250) {
+                    if (curIdx === arrPlane.length - 1) {
+                        $("section img.plane").attr("src","assets/images/plane/" + arrPlane[curIdx] + ".png");
+                        $.notify("Airbus A380 ready to take off", "success");
+                        curIdx = 0;
+                    } else {
+                        $("section img.plane").attr("src","assets/images/plane/" + arrPlane[curIdx] + ".png");
+                        $.notify("Boeing 777 ready to take off", "success");
+                        curIdx++;
+                    }
+                }
             }
         });
+        // AirPlane End
     }
 
     $(document).ready(function () {
