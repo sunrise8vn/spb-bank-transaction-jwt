@@ -78,7 +78,8 @@
         <img src="/assets/images/plane/cloudx.png" alt="" style="--i:2;">
     </div>
     <div class="runway"></div>
-    <img src="/assets/images/plane/plane_a380.png" class="plane" alt="">
+    <img src="/assets/images/plane/airbus_a380.png" class="plane" alt="">
+    <div id="speed" style="top: -200px; width: 100px; position: relative; color: #ed8b8b;"><span>250</span> km/h</div>
 </section>
 
 <script type="text/javascript" src="/assets/js/jquery-3.6.0.js"></script>
@@ -98,9 +99,32 @@
         }
     }
 
-    let arrPlane = ["plane_b777", "plane_a380"];
+    let arrPlane = [
+        {
+            "name": "Boeing 777",
+            "code": "boeing_777"
+        },
+        {
+            "name": "Antonov AN-148-201",
+            "code": "antonov_148"
+        },
+        {
+            "name": "Antonov AN-158-100",
+            "code": "antonov_158"
+        },
+        {
+            "name": "Antonov AN-178",
+            "code": "antonov_178"
+        },
+        {
+            "name": "Airbus A380",
+            "code": "airbus_a380"
+        }
+    ];
     let curIdx = 0;
+    let speed, speedUp, speedDown;
 
+    page.element.section = $("section");
     page.element.frmLogin = $("#frmLogin");
     page.element.usnLogin = $("#usnLogin");
     page.element.pwdLogin = $("#pwdLogin");
@@ -208,11 +232,72 @@
             } else {
                 $.notify("Something went wrong, please try again", "error");
             }
+        });
+    }
+
+    page.commands.planeHandle = () => {
+        $(document).on('keydown', function(e) {
+            if(e.keyCode === 8) {
+                $(".hero").removeClass("hide");
+                $("section").css("display", "none");
+            }
+
+            if(e.keyCode === 67) {
+                if ($("img.plane").width() === 250) {
+                    if (curIdx === arrPlane.length - 1) {
+                        $("section img.plane").attr("src","assets/images/plane/" + arrPlane[curIdx].code + ".png");
+                        $.notify(arrPlane[curIdx].name + " ready to take off", "success");
+                        curIdx = 0;
+                    } else {
+                        $("section img.plane").attr("src","assets/images/plane/" + arrPlane[curIdx].code + ".png");
+                        $.notify(arrPlane[curIdx].name + " ready to take off", "success");
+                        curIdx++;
+                    }
+                }
+            }
+        });
+    }
+
+    page.commands.speedHandle = () => {
+        page.element.section.on('mousedown touchstart', function(e) {
+
+            if (!speedUp) {
+                speedUp = setInterval(function(){
+                    speed = $("img.plane").width();
+
+                    $("#speed span").html(speed);
+
+                    if (speed === 250) {
+                        clearInterval(speedUp);
+                        speedUp = undefined;
+                    }
+
+                }, 100);
+            }
+
+        });
+
+        page.element.section.on('mouseup mouseleave touchend', function(e) {
+
+            if (!speedDown) {
+                speedDown = setInterval(function(){
+                    speed = $("img.plane").width();
+
+                    $("#speed span").html(speed);
+
+                    if (speed === 250) {
+                        clearInterval(speedDown);
+                        speedDown = undefined;
+                    }
+
+                }, 100);
+            }
 
         });
     }
 
     page.initializeControlEvent = () => {
+
         page.element.loginBoxBtn.on("click", function () {
             page.commands.switchLoginForm();
         });
@@ -256,28 +341,9 @@
             $("section").css("display", "flex");
         });
 
-        // AirPlane Start
-        $(document).on('keydown', function(e) {
-            if(e.keyCode === 8) {
-                $(".hero").removeClass("hide");
-                $("section").css("display", "none");
-            }
+        page.commands.planeHandle();
 
-            if(e.keyCode === 67) {
-                if ($("img.plane").width() === 250) {
-                    if (curIdx === arrPlane.length - 1) {
-                        $("section img.plane").attr("src","assets/images/plane/" + arrPlane[curIdx] + ".png");
-                        $.notify("Airbus A380 ready to take off", "success");
-                        curIdx = 0;
-                    } else {
-                        $("section img.plane").attr("src","assets/images/plane/" + arrPlane[curIdx] + ".png");
-                        $.notify("Boeing 777 ready to take off", "success");
-                        curIdx++;
-                    }
-                }
-            }
-        });
-        // AirPlane End
+        page.commands.speedHandle();
     }
 
     $(document).ready(function () {

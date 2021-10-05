@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <title>Customer management</title>
-    <th:block th:include="layout/head" />
+    <th:block th:include="layout/head"/>
 </head>
 <body>
     <div class="main-container">
@@ -17,8 +17,8 @@
                             <a class="nav-link dropdown-toggle nav-user mr-0" data-toggle="dropdown" href="#">
                                 <img src="/assets/images/avatar_1.jpg" alt="user-image" class="rounded-circle">
                                 <span class="pro-user-name ml-1">
-                                    <i class="mdi mdi-chevron-down"></i>
-                                </span>
+                                        <i class="mdi mdi-chevron-down"></i>
+                                    </span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right profile-dropdown">
                                 <div class="dropdown-header">
@@ -44,31 +44,32 @@
                             </div>
                         </li>
                     </ul>
-                    <a class="btn btn-outline-light create-modal"><i class="fa fa-plus-square-o"></i> <span>Add New Customer</span></a>
+                    <a class="btn btn-outline-light create-modal"><i class="fa fa-plus-square-o"></i>
+                        <span>Add New Customer</span></a>
                     <a href="/transfers" class="btn btn-outline-light"><i class="fa fa-history"></i> <span>Transfer money Information</span></a>
                 </div>
             </div>
         </header>
         <div class="box-body">
 
-            <th:block th:include="customer/frm_list_table" />
+            <th:block th:include="customer/frm_list_table"/>
 
             <input type="hidden" id="currentRow"/>
 
             <table id="tbListCustomers" class="table table-hover">
                 <thead>
-                    <tr>
-                        <th></th>
-                        <th>#</th>
-                        <th>FullName</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Balance</th>
-                        <th>Province</th>
-                        <th>District</th>
-                        <th>Ward</th>
-                        <th>Address</th>
-                    </tr>
+                <tr>
+                    <th></th>
+                    <th>#</th>
+                    <th>FullName</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Balance</th>
+                    <th>Province</th>
+                    <th>District</th>
+                    <th>Ward</th>
+                    <th>Address</th>
+                </tr>
                 </thead>
                 <tbody>
                 </tbody>
@@ -77,20 +78,22 @@
         </div>
     </div>
 
+    <div class="loader hide"></div>
+
     <div class="footer">
     </div>
 
-    <th:block th:include="customer/frm_create" />
+    <th:block th:include="customer/frm_create"/>
 
-    <th:block th:include="customer/frm_update" />
+    <th:block th:include="customer/frm_update"/>
 
-    <th:block th:include="customer/frm_deposit" />
+    <th:block th:include="customer/frm_deposit"/>
 
-    <th:block th:include="customer/frm_withdraw" />
+    <th:block th:include="customer/frm_withdraw"/>
 
-    <th:block th:include="customer/frm_transfer" />
+    <th:block th:include="customer/frm_transfer"/>
 
-    <th:block th:include="customer/footer" />
+    <th:block th:include="customer/footer"/>
 
     <script type="text/javascript" src="/assets/js/custom-validation.js"></script>
     <script type="text/javascript" src="/assets/js/app.js"></script>
@@ -124,9 +127,12 @@
                 alertDanger: {},
                 inputError: {}
             },
-            initializeControlEvent: () => {}
+            initializeControlEvent: () => {
+            }
         }
 
+        page.element.loading = true;
+        page.element.loader = $(".loader");
         page.element.currentRow = $("#currentRow");
         page.element.tempCustomer = $("#tempCustomer");
         page.element.footer = $(".footer");
@@ -234,6 +240,8 @@
         }
 
         page.loadData.getAllCustomers = () => {
+            page.element.loader.removeClass("hide");
+
             return $.ajax({
                 type: "GET",
                 url: page.urls.getAllCustomers,
@@ -246,8 +254,12 @@
                     locationRegion = customer.locationRegion;
                     page.commands.addRow();
                 });
-            }).fail(function() {
+
+            }).fail(function () {
                 App.showErrorAlert(App.ERROR_404);
+            }).always(function () {
+                page.element.loader.addClass("hide");
+                page.element.loading = false;
             });
         }
 
@@ -266,6 +278,8 @@
         }
 
         page.dialogs.loadData.getAllDistricts = (provinceId) => {
+            page.element.loader.removeClass("hide");
+
             return $.ajax({
                 type: "GET",
                 url: page.urls.getAllDistricts + "/" + provinceId
@@ -276,10 +290,14 @@
                 });
             }).fail(function () {
                 App.showErrorAlert("Tải danh sách Quận - Phường - Huyện không thành công !");
+            }).always(function () {
+                page.element.loader.addClass("hide");
             });
         }
 
         page.dialogs.loadData.getAllWards = (districtId) => {
+            page.element.loader.removeClass("hide");
+
             return $.ajax({
                 type: "GET",
                 url: page.urls.getAllWards + "/" + districtId
@@ -290,10 +308,18 @@
                 });
             }).fail(function () {
                 App.showErrorAlert("Tải danh sách Xã - Thị Trấn không thành công !");
+            }).always(function () {
+                page.element.loader.addClass("hide");
+
+                if (page.element.loading) {
+                    page.element.loader.removeClass("hide");
+                }
             });
         }
 
         page.dialogs.commands.provinceChange = () => {
+            page.element.loader.removeClass("hide");
+
             return $.ajax({
                 type: "GET",
                 url: page.urls.getAllDistricts + "/" + locationRegion.provinceId
@@ -307,10 +333,14 @@
                 });
             }).fail(function () {
                 App.showErrorAlert("Tải danh sách Quận - Phường - Huyện không thành công !");
+            }).always(function () {
+                page.element.loader.addClass("hide");
             });
         }
 
         page.dialogs.commands.districtChange = () => {
+            page.element.loader.removeClass("hide");
+
             $.ajax({
                 type: "GET",
                 url: page.urls.getAllWards + "/" + locationRegion.districtId
@@ -324,6 +354,8 @@
                 });
             }).fail(function () {
                 App.showErrorAlert("Tải danh sách Xã - Thị Trấn không thành công !");
+            }).always(function () {
+                page.element.loader.addClass("hide");
             });
         }
 
@@ -333,6 +365,8 @@
         }
 
         page.commands.showUpdateModal = () => {
+            page.element.loader.removeClass("hide");
+
             $.ajax({
                 type: "GET",
                 url: page.urls.getCustomerById + customer.id,
@@ -362,12 +396,16 @@
 
                 page.dialogs.element.modalUpdateCustomer.modal('show');
 
-            }).fail( function() {
+            }).fail(function () {
                 App.showErrorAlert(App.ERROR_404);
+            }).always(function () {
+                page.element.loader.addClass("hide");
             });
         }
 
         page.commands.showDepositModal = () => {
+            page.element.loader.removeClass("hide");
+
             $.ajax({
                 type: "GET",
                 url: page.urls.getDeposit + deposit.customerId,
@@ -380,12 +418,17 @@
                 page.dialogs.element.balanceDep.val(deposit.balance);
 
                 page.dialogs.element.modalDeposit.modal('show');
+
             }).fail(function () {
                 App.showErrorAlert(App.ERROR_404);
+            }).always(function () {
+                page.element.loader.addClass("hide");
             });
         }
 
         page.commands.showWithdrawModal = () => {
+            page.element.loader.removeClass("hide");
+
             $.ajax({
                 type: "GET",
                 url: page.urls.getWithdraw + withdraw.customerId,
@@ -398,12 +441,17 @@
                 page.dialogs.element.balanceWd.val(withdraw.balance);
 
                 page.dialogs.element.modalWithdraw.modal('show');
-            }).fail(function() {
+
+            }).fail(function () {
                 App.showErrorAlert(App.ERROR_404);
+            }).always(function () {
+                page.element.loader.addClass("hide");
             });
         }
 
         page.commands.showTransferModal = () => {
+            page.element.loader.removeClass("hide");
+
             $.ajax({
                 type: "GET",
                 url: page.urls.getTransfer + transfer.senderId,
@@ -428,8 +476,11 @@
                 page.dialogs.element.balanceTrf.val(transfer.balance);
 
                 page.dialogs.element.modalTransfer.modal('show');
-            }).fail(function() {
+
+            }).fail(function () {
                 App.showErrorAlert(App.ERROR_404);
+            }).always(function () {
+                page.element.loader.addClass("hide");
             });
         }
 
@@ -457,6 +508,8 @@
             customer.phone = page.dialogs.element.phone.val();
             customer.locationRegion = locationRegion;
 
+            page.element.loader.removeClass("hide");
+
             $.ajax({
                 type: "POST",
                 headers: {
@@ -465,7 +518,7 @@
                 },
                 url: page.urls.saveNew,
                 data: JSON.stringify(customer)
-            }).done( (data) => {
+            }).done((data) => {
                 customer = data;
                 locationRegion = customer.locationRegion;
 
@@ -476,7 +529,7 @@
 
                 page.dialogs.element.modalCreateCustomer.modal('hide');
 
-            }).fail( (jqXHR) => {
+            }).fail((jqXHR) => {
                 page.dialogs.alertDanger.modalCreate.empty().removeClass("hide").addClass("show");
 
                 let str = ``;
@@ -485,7 +538,7 @@
                     if (jqXHR.responseJSON.message) {
                         str += `<label id="message-error" class="error" for="message">${jqXHR.responseJSON.message}</label>`;
                     } else {
-                        $.each( jqXHR.responseJSON, function( key, value ) {
+                        $.each(jqXHR.responseJSON, function (key, value) {
                             str += `<label id="${key}-error" class="error" for="${key}">${value}</label>`;
                             $("#" + key).addClass("error");
                         });
@@ -495,6 +548,9 @@
                 }
 
                 page.dialogs.alertDanger.modalCreate.html(str);
+
+            }).always(function () {
+                page.element.loader.addClass("hide");
             });
         }
 
@@ -513,6 +569,8 @@
 
             customer.locationRegion = locationRegion;
 
+            page.element.loader.removeClass("hide");
+
             $.ajax({
                 type: "POST",
                 headers: {
@@ -521,7 +579,7 @@
                 },
                 url: page.urls.saveEdit,
                 data: JSON.stringify(customer)
-            }).done( (resp) => {
+            }).done((resp) => {
                 customer = resp;
                 locationRegion = customer.locationRegion;
 
@@ -540,7 +598,7 @@
 
                 page.dialogs.element.modalUpdateCustomer.modal('hide');
 
-            }).fail( (jqXHR) => {
+            }).fail((jqXHR) => {
                 page.dialogs.alertDanger.modalUpdate.empty().removeClass("hide").addClass("show");
 
                 let str = ``;
@@ -552,7 +610,7 @@
                         if (jqXHR.responseJSON.message) {
                             str += `<label id="message-error" class="error" for="message">${jqXHR.responseJSON.message}</label>`;
                         } else {
-                            $.each( jqXHR.responseJSON, function( key, value ) {
+                            $.each(jqXHR.responseJSON, function (key, value) {
                                 str += `<label id="${key}Up-error" class="error" for="${key}Up">${value}</label>`;
                                 $("#" + key + "Up").addClass("error");
                             });
@@ -563,6 +621,9 @@
                 }
 
                 page.dialogs.alertDanger.modalUpdate.html(str);
+
+            }).always(function () {
+                page.element.loader.addClass("hide");
             });
         }
 
@@ -570,6 +631,8 @@
             deposit.customerId = page.dialogs.element.customerIdDep.val();
             deposit.balance = App.removeFormatNumberSpace(deposit.balance);
             deposit.transactionAmount = App.removeFormatNumberSpace(page.dialogs.element.transactionAmountDep.val());
+
+            page.element.loader.removeClass("hide");
 
             $.ajax({
                 type: "POST",
@@ -579,7 +642,7 @@
                 },
                 url: page.urls.doDeposit,
                 data: JSON.stringify(deposit)
-            }).done( (resp) => {
+            }).done((resp) => {
                 customer = resp;
                 locationRegion = customer.locationRegion;
 
@@ -594,7 +657,7 @@
 
                 page.dialogs.element.modalDeposit.modal('hide');
 
-            }).fail( (jqXHR) => {
+            }).fail((jqXHR) => {
                 page.dialogs.alertDanger.modalDeposit.empty().removeClass("hide").addClass("show");
 
                 let str = ``;
@@ -603,7 +666,7 @@
                     if (jqXHR.responseJSON.message) {
                         str += `<label id="message-error" class="error" for="message">${jqXHR.responseJSON.message}</label>`;
                     } else {
-                        $.each( jqXHR.responseJSON, function( key, value ) {
+                        $.each(jqXHR.responseJSON, function (key, value) {
                             str += `<label id="${key}Dep-error" class="error" for="${key}Dep">${value}</label>`;
                             $("#" + key + "Dep").addClass("error");
                         });
@@ -613,6 +676,9 @@
                 }
 
                 page.dialogs.alertDanger.modalDeposit.html(str);
+
+            }).always(function () {
+                page.element.loader.addClass("hide");
             });
         }
 
@@ -620,6 +686,8 @@
             withdraw.customerId = page.dialogs.element.customerIdWd.val();
             withdraw.balance = App.removeFormatNumberSpace(withdraw.balance);
             withdraw.transactionAmount = App.removeFormatNumberSpace(page.dialogs.element.transactionAmountWd.val());
+
+            page.element.loader.removeClass("hide");
 
             $.ajax({
                 type: "POST",
@@ -629,14 +697,14 @@
                 },
                 url: page.urls.doWithdraw,
                 data: JSON.stringify(withdraw)
-            }).done( (resp) => {
+            }).done((resp) => {
                 customer = resp;
                 locationRegion = customer.locationRegion;
 
                 customer.balance = App.formatNumberSpace(customer.balance);
                 let current_row = page.element.frmListCustomer.find('#' + page.element.currentRow.val());
                 let updated_row = $(tempCustomer(customer.id, customer.fullName, customer.email, customer.phone, customer.balance, locationRegion.provinceName, locationRegion.districtName, locationRegion.wardName, locationRegion.address));
-                current_row.replaceWith (updated_row);
+                current_row.replaceWith(updated_row);
 
                 page.commands.formatNumber();
 
@@ -644,7 +712,7 @@
 
                 page.dialogs.element.modalWithdraw.modal('hide');
 
-            }).fail( (jqXHR) => {
+            }).fail((jqXHR) => {
                 page.dialogs.alertDanger.modalWithdraw.empty().removeClass("hide").addClass("show");
 
                 let str = ``;
@@ -653,7 +721,7 @@
                     if (jqXHR.responseJSON.message) {
                         str += `<label id="message-error" class="error" for="message">${jqXHR.responseJSON.message}</label>`;
                     } else {
-                        $.each( jqXHR.responseJSON, function( key, value ) {
+                        $.each(jqXHR.responseJSON, function (key, value) {
                             str += `<label id="${key}Wd-error" class="error" for="${key}Wd">${value}</label>`;
                             $("#" + key + "Wd").addClass("error");
                         });
@@ -663,6 +731,9 @@
                 }
 
                 page.dialogs.alertDanger.modalWithdraw.html(str);
+
+            }).always(function () {
+                page.element.loader.addClass("hide");
             });
         }
 
@@ -670,6 +741,8 @@
             transfer.balance = App.removeFormatNumberSpace(transfer.balance);
             transfer.transferAmount = App.removeFormatNumberSpace(page.dialogs.element.transferAmountTrf.val());
             transfer.recipientId = page.dialogs.element.recipientIdTrf.val();
+
+            page.element.loader.removeClass("hide");
 
             $.ajax({
                 type: "POST",
@@ -679,7 +752,7 @@
                 },
                 url: page.urls.doTransfer,
                 data: JSON.stringify(transfer)
-            }).done( (resp) => {
+            }).done((resp) => {
 
                 sender = resp.sender;
                 recipient = resp.recipient;
@@ -690,12 +763,12 @@
                 sender.balance = App.formatNumberSpace(sender.balance);
                 let current_row_sender = page.element.frmListCustomer.find('#tr_' + sender.id);
                 let updated_row_sender = $(tempCustomer(sender.id, sender.fullName, sender.email, sender.phone, sender.balance, sender.locationRegion.provinceName, sender.locationRegion.districtName, sender.locationRegion.wardName, sender.locationRegion.address))
-                current_row_sender.replaceWith (updated_row_sender);
+                current_row_sender.replaceWith(updated_row_sender);
 
                 recipient.balance = App.formatNumberSpace(recipient.balance);
                 let current_row_recipient = page.element.frmListCustomer.find('#tr_' + recipient.id);
                 let updated_row_recipient = $(tempCustomer(recipient.id, recipient.fullName, recipient.email, recipient.phone, recipient.balance, recipient.locationRegion.provinceName, recipient.locationRegion.districtName, recipient.locationRegion.wardName, recipient.locationRegion.address))
-                current_row_recipient.replaceWith (updated_row_recipient);
+                current_row_recipient.replaceWith(updated_row_recipient);
 
                 page.dialogs.element.transferAmountTrf.val("");
 
@@ -704,7 +777,7 @@
                 App.showSuccessAlert(App.SUCCESS_TRANSFER);
                 App.formatTooltip();
 
-            }).fail( (jqXHR) => {
+            }).fail((jqXHR) => {
 
                 page.dialogs.alertDanger.modalTransfer.empty().removeClass("hide").addClass("show");
 
@@ -714,7 +787,7 @@
                     if (jqXHR.responseJSON.message) {
                         str += `<label id="message-error" class="error" for="message">${jqXHR.responseJSON.message}</label>`;
                     } else {
-                        $.each( jqXHR.responseJSON, function( key, value ) {
+                        $.each(jqXHR.responseJSON, function (key, value) {
                             str += `<label id="${key}Trf-error" class="error" for="${key}Trf">${value}</label>`;
                             $("#" + key + "Trf").addClass("error");
                         });
@@ -724,10 +797,15 @@
                 }
 
                 page.dialogs.alertDanger.modalTransfer.html(str);
+
+            }).always(function () {
+                page.element.loader.addClass("hide");
             });
         }
 
         page.dialogs.commands.suspendCustomer = () => {
+            page.element.loader.removeClass("hide");
+
             $.ajax({
                 type: "POST",
                 headers: {
@@ -735,15 +813,18 @@
                     'Content-Type': 'application/json'
                 },
                 url: page.urls.doSuspend + customer.id
-            }).done( () => {
+            }).done(() => {
                 App.showSuccessAlert(App.SUCCESS_SUSPEND);
+
                 $("#tr_" + customer.id).remove();
-            }).fail( (jqXHR) => {
+            }).fail((jqXHR) => {
                 if (jqXHR.status === 403) {
                     App.showError403();
                 } else {
                     App.showErrorAlert(App.ERROR_404);
                 }
+            }).always(function () {
+                page.element.loader.addClass("hide");
             });
         }
 
@@ -926,7 +1007,7 @@
                 page.commands.formatNumber();
             });
 
-            page.dialogs.loadData.getAllProvinces().then(function() {
+            page.dialogs.loadData.getAllProvinces().then(function () {
 
                 let province_id = page.dialogs.element.province.prop("selectedIndex", 0).val();
 

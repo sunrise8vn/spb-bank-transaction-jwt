@@ -63,7 +63,9 @@ public class CustomerAPI {
         Optional<CustomerDTO> customerDTO = Optional.ofNullable(customerService.findCustomerDTOById(id));
 
         if (customerDTO.isPresent()) {
+
             return new ResponseEntity<>(customerDTO.get(), HttpStatus.OK);
+
         } else {
             throw new ResourceNotFoundException("No customer found with the Id: " + id);
         }

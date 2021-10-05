@@ -13,9 +13,13 @@ section
     overflow: hidden;
 }
 
+section:hover {
+    cursor: pointer;
+}
+
 section .runway
 {
-    position: relative;
+    position: absolute;
     width: 400px;
     height: 100vh;
     background: #1378bc;
@@ -75,6 +79,7 @@ section:active .runway::before
     pointer-events: none;
     filter: drop-shadow(10px 10px 0 rgba(0, 0, 0, 0.5));
     transition: 5s;
+    user-select: none;
 }
 
 section:active .plane
@@ -145,4 +150,14 @@ section:active .clouds
     {
         transform: translateY(-100%);
     }
+}
+
+#speed {
+    top: -200px;
+    width: 100px;
+    left: 250px;
+    display: grid;
+    position: relative;
+    color: #ed8b8b;
+    user-select: none;
 }

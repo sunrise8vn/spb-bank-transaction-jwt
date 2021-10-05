@@ -89,6 +89,8 @@
         </div>
     </div>
 
+    <div class="loader"></div>
+
     <script type="text/javascript" src="/assets/js/app.js"></script>
 
     <script>
@@ -103,6 +105,7 @@
             initializeControlEvent: () => {}
         }
 
+        page.element.loader = $(".loader");
         page.element.tempTransfer = $("#tempTransfer");
         page.element.frmListTransfer = $("#tbListTransfers tbody");
         page.element.spSumFeesAmount = $("#spSumFeesAmount");
@@ -127,8 +130,12 @@
 
                 $(".num-comma").number(true, 0, ',', ',');
 
+                page.element.loader.addClass("hide");
+
             }).fail(function() {
                 App.showErrorAlert(App.ERROR_404);
+            }).always(function () {
+                page.element.loader.addClass("hide");
             });
         }
 
