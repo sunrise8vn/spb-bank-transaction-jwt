@@ -37,7 +37,7 @@
 
                                 <div class="dropdown-divider"></div>
 
-                                <a href="/logout" class="dropdown-item notify-item">
+                                <a href="/logout" class="dropdown-item notify-item logout">
                                     <i class="fa fa-sign-out"></i>
                                     <span>Logout</span>
                                 </a>
@@ -131,6 +131,7 @@
             }
         }
 
+        page.element.logout = $(".profile-dropdown a.logout");
         page.element.loading = true;
         page.element.loader = $(".loader");
         page.element.currentRow = $("#currentRow");
@@ -1000,6 +1001,11 @@
             page.dialogs.element.modalTransfer.on("hidden.bs.modal", function () {
                 page.dialogs.close.modalTransfer();
             });
+
+            page.element.logout.on("click", function () {
+                $.removeCookie("JWT");
+            });
+
         }
 
         $(document).ready(function () {

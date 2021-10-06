@@ -37,7 +37,7 @@
 
                                 <div class="dropdown-divider"></div>
 
-                                <a href="/logout" class="dropdown-item notify-item">
+                                <a href="/logout" class="dropdown-item notify-item logout">
                                     <i class="fa fa-sign-out"></i>
                                     <span>Logout</span>
                                 </a>
@@ -105,6 +105,7 @@
             initializeControlEvent: () => {}
         }
 
+        page.element.logout = $(".profile-dropdown a.logout");
         page.element.loader = $(".loader");
         page.element.tempTransfer = $("#tempTransfer");
         page.element.frmListTransfer = $("#tbListTransfers tbody");
@@ -158,6 +159,10 @@
 
             $(document).on("click", function () {
                 $(".profile-dropdown").hide();
+            });
+
+            page.element.logout.on("click", function () {
+                $.removeCookie("JWT");
             });
         }
 
