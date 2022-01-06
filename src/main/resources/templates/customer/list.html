@@ -17,12 +17,12 @@
                             <a class="nav-link dropdown-toggle nav-user mr-0" data-toggle="dropdown" href="#">
                                 <img src="/assets/images/avatar_1.jpg" alt="user-image" class="rounded-circle">
                                 <span class="pro-user-name ml-1">
-                                        <i class="mdi mdi-chevron-down"></i>
-                                    </span>
+                                    <i class="mdi mdi-chevron-down"></i>
+                                </span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right profile-dropdown">
                                 <div class="dropdown-header">
-                                    <h6 class="text-overflow m-0">Welcome !</h6>
+                                    <h6 class="text-overflow m-0">Welcome <span th:text="${username}" style="color: #ff9900"></span> !</h6>
                                 </div>
 
                                 <a href="javascript:void(0);" class="dropdown-item notify-item">
@@ -46,7 +46,7 @@
                     </ul>
                     <a class="btn btn-outline-light create-modal"><i class="fa fa-plus-square-o"></i>
                         <span>Add New Customer</span></a>
-                    <a href="/transfers" class="btn btn-outline-light"><i class="fa fa-history"></i> <span>Transfer money Information</span></a>
+                    <a href="/transfers" class="btn btn-outline-light"><i class="fa fa-history"></i> <span>Transfer history</span></a>
                 </div>
             </div>
         </header>
@@ -80,8 +80,7 @@
 
     <div class="loader hide"></div>
 
-    <div class="footer">
-    </div>
+    <div class="footer"></div>
 
     <th:block th:include="customer/frm_create"/>
 
@@ -95,8 +94,10 @@
 
     <th:block th:include="customer/footer"/>
 
-    <script type="text/javascript" src="/assets/js/custom-validation.js"></script>
+    <th:block th:replace="/layout/script :: script" />
+
     <script type="text/javascript" src="/assets/js/app.js"></script>
+    <script type="text/javascript" src="/assets/js/custom-validation.js"></script>
 
     <script>
         let page = {
@@ -126,8 +127,6 @@
                 close: {},
                 alertDanger: {},
                 inputError: {}
-            },
-            initializeControlEvent: () => {
             }
         }
 
@@ -153,6 +152,7 @@
         page.dialogs.element.frmDeposit = $("#frmDeposit");
         page.dialogs.element.frmWithdraw = $("#frmWithdraw");
         page.dialogs.element.frmTransfer = $("#frmTransfer");
+        page.dialogs.element.tempOption = $("#tempOption");
 
         page.dialogs.element.fullName = $("#fullName");
         page.dialogs.element.email = $("#email");
@@ -206,9 +206,10 @@
         let transfer = new Transfer();
         let sender = new Sender();
         let recipient = new Recipient();
-        let tempFooter = jQuery.validator.format($.trim(page.element.tempFooter.val()));
-        let tempCustomer = jQuery.validator.format($.trim(page.element.tempCustomer.val()));
-        let tempOption = jQuery.validator.format($.trim($("#tempOption").val()));
+
+        let tempFooter = jQuery.validator.format($.trim(page.element.tempFooter.val().toString()));
+        let tempCustomer = jQuery.validator.format($.trim(page.element.tempCustomer.val().toString()));
+        let tempOption = jQuery.validator.format($.trim(page.dialogs.element.tempOption.val().toString()));
 
         page.commands.addRow = () => {
             page.element.frmListCustomer.prepend($(tempCustomer(customer.id, customer.fullName, customer.email, customer.phone, customer.balance, locationRegion.provinceName, locationRegion.districtName, locationRegion.wardName, locationRegion.address)));
@@ -229,15 +230,13 @@
                 $(this).val(App.formatNumberSpace($(this).val()));
             });
 
-            $('input.num-space').keypress(function (e) {
+            $('input.num-space').on("keypress", function (e) {
 
                 let charCode = (e.which) ? e.which : e.keyCode
 
                 if (String.fromCharCode(charCode).match(/[^0-9]/g))
                     return false;
             });
-
-            $('[data-toggle="tooltip"]').tooltip();
         }
 
         page.loadData.getAllCustomers = () => {
@@ -248,7 +247,6 @@
                 url: page.urls.getAllCustomers,
             }).done((data) => {
 
-                let str = ``;
                 $.each(data, (index, item) => {
                     customer = item;
                     customer.balance = App.formatNumberSpace(customer.balance);
@@ -269,10 +267,12 @@
                 type: "GET",
                 url: page.urls.getAllProvinces
             }).done((data) => {
+
                 $.each(data.results, (i, item) => {
                     page.dialogs.element.province.append($(tempOption(item.province_id, item.province_name)));
                     page.dialogs.element.provinceUp.append($(tempOption(item.province_id, item.province_name)));
                 });
+
             }).fail(function () {
                 App.showErrorAlert("Tải danh sách Tỉnh - Thành Phố không thành công !");
             });
@@ -285,10 +285,12 @@
                 type: "GET",
                 url: page.urls.getAllDistricts + "/" + provinceId
             }).done((data) => {
+
                 $.each(data.results, (i, item) => {
                     page.dialogs.element.district.append($(tempOption(item.district_id, item.district_name)));
                     page.dialogs.element.districtUp.append($(tempOption(item.district_id, item.district_name)));
                 });
+
             }).fail(function () {
                 App.showErrorAlert("Tải danh sách Quận - Phường - Huyện không thành công !");
             }).always(function () {
@@ -303,10 +305,12 @@
                 type: "GET",
                 url: page.urls.getAllWards + "/" + districtId
             }).done((data) => {
+
                 $.each(data.results, (i, item) => {
                     page.dialogs.element.ward.append($(tempOption(item.ward_id, item.ward_name)));
                     page.dialogs.element.wardUp.append($(tempOption(item.ward_id, item.ward_name)));
                 });
+
             }).fail(function () {
                 App.showErrorAlert("Tải danh sách Xã - Thị Trấn không thành công !");
             }).always(function () {
@@ -457,14 +461,14 @@
                 type: "GET",
                 url: page.urls.getTransfer + transfer.senderId,
             }).done((resp) => {
-                transfer = resp.transferDTO;
+                transfer = resp.transfer;
 
-                let recipientDTOS = [];
-                recipientDTOS = resp.recipientDTOS;
+                let recipients = [];
+                recipients = resp.recipients;
 
                 let str = ``;
 
-                $.each(recipientDTOS, (index, item) => {
+                $.each(recipients, (index, item) => {
                     str += `<option value="${item.recipientId}">(${item.recipientId}) ${item.recipientName}</option>`;
                 });
 
@@ -496,6 +500,10 @@
 
 
         page.dialogs.commands.createCustomer = () => {
+            delete customer.id;
+            delete customer.balance;
+            delete locationRegion.id;
+
             locationRegion.provinceId = page.dialogs.element.province.val();
             locationRegion.provinceName = page.dialogs.element.province.find('option:selected').text();
             locationRegion.districtId = page.dialogs.element.district.val();
@@ -528,24 +536,32 @@
 
                 App.showSuccessAlert(App.SUCCESS_CREATED);
 
-                page.dialogs.element.modalCreateCustomer.modal('hide');
+                page.dialogs.element.modalCreateCustomer.modal("hide");
 
             }).fail((jqXHR) => {
                 page.dialogs.alertDanger.modalCreate.empty().removeClass("hide").addClass("show");
 
                 let str = ``;
 
-                if (jqXHR.responseJSON) {
-                    if (jqXHR.responseJSON.message) {
-                        str += `<label id="message-error" class="error" for="message">${jqXHR.responseJSON.message}</label>`;
-                    } else {
-                        $.each(jqXHR.responseJSON, function (key, value) {
-                            str += `<label id="${key}-error" class="error" for="${key}">${value}</label>`;
-                            $("#" + key).addClass("error");
-                        });
-                    }
+                if (jqXHR.status === 401) {
+                    str += `<label id="message-error" class="error" for="message">${App.ERROR_401}</label>`;
                 } else {
-                    str += `<label id="message-error" class="error" for="message">${App.ERROR_500}</label>`;
+                    if (jqXHR.status === 403) {
+                        str += `<label id="message-error" class="error" for="message">${App.ERROR_403}</label>`;
+                    } else {
+                        if (jqXHR.responseJSON) {
+                            if (jqXHR.responseJSON.message) {
+                                str += `<label id="message-error" class="error" for="message">${jqXHR.responseJSON.message}</label>`;
+                            } else {
+                                $.each(jqXHR.responseJSON, function (key, value) {
+                                    str += `<label id="${key}-error" class="error" for="${key}">${value}</label>`;
+                                    $("#" + key).addClass("error");
+                                });
+                            }
+                        } else {
+                            str += `<label id="message-error" class="error" for="message">${App.ERROR_500}</label>`;
+                        }
+                    }
                 }
 
                 page.dialogs.alertDanger.modalCreate.html(str);
@@ -556,9 +572,6 @@
         }
 
         page.dialogs.commands.updateCustomer = () => {
-            customer.fullName = page.dialogs.element.fullNameUp.val();
-            customer.email = page.dialogs.element.emailUp.val();
-            customer.phone = page.dialogs.element.phoneUp.val();
 
             locationRegion.provinceId = page.dialogs.element.provinceUp.val();
             locationRegion.provinceName = page.dialogs.element.provinceUp.find('option:selected').text();
@@ -569,11 +582,14 @@
             locationRegion.address = page.dialogs.element.addressUp.val();
 
             customer.locationRegion = locationRegion;
+            customer.fullName = page.dialogs.element.fullNameUp.val();
+            customer.email = page.dialogs.element.emailUp.val();
+            customer.phone = page.dialogs.element.phoneUp.val();
 
             page.element.loader.removeClass("hide");
 
             $.ajax({
-                type: "POST",
+                type: "PUT",
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
@@ -604,20 +620,24 @@
 
                 let str = ``;
 
-                if (jqXHR.status === 403) {
-                    str += `<label id="message-error" class="error" for="message">${App.ERROR_403}</label>`;
+                if (jqXHR.status === 401) {
+                    str += `<label id="message-error" class="error" for="message">${App.ERROR_401}</label>`;
                 } else {
-                    if (jqXHR.responseJSON) {
-                        if (jqXHR.responseJSON.message) {
-                            str += `<label id="message-error" class="error" for="message">${jqXHR.responseJSON.message}</label>`;
-                        } else {
-                            $.each(jqXHR.responseJSON, function (key, value) {
-                                str += `<label id="${key}Up-error" class="error" for="${key}Up">${value}</label>`;
-                                $("#" + key + "Up").addClass("error");
-                            });
-                        }
+                    if (jqXHR.status === 403) {
+                        str += `<label id="message-error" class="error" for="message">${App.ERROR_403}</label>`;
                     } else {
-                        str += `<label id="message-error" class="error" for="message">${App.ERROR_500}</label>`;
+                        if (jqXHR.responseJSON) {
+                            if (jqXHR.responseJSON.message) {
+                                str += `<label id="message-error" class="error" for="message">${jqXHR.responseJSON.message}</label>`;
+                            } else {
+                                $.each(jqXHR.responseJSON, function (key, value) {
+                                    str += `<label id="${key}Up-error" class="error" for="${key}Up">${value}</label>`;
+                                    $("#" + key + "Up").addClass("error");
+                                });
+                            }
+                        } else {
+                            str += `<label id="message-error" class="error" for="message">${App.ERROR_500}</label>`;
+                        }
                     }
                 }
 
@@ -663,17 +683,21 @@
 
                 let str = ``;
 
-                if (jqXHR.responseJSON) {
-                    if (jqXHR.responseJSON.message) {
-                        str += `<label id="message-error" class="error" for="message">${jqXHR.responseJSON.message}</label>`;
-                    } else {
-                        $.each(jqXHR.responseJSON, function (key, value) {
-                            str += `<label id="${key}Dep-error" class="error" for="${key}Dep">${value}</label>`;
-                            $("#" + key + "Dep").addClass("error");
-                        });
-                    }
+                if (jqXHR.status === 401) {
+                    str += `<label id="message-error" class="error" for="message">${App.ERROR_401}</label>`;
                 } else {
-                    str += `<label id="message-error" class="error" for="message">${App.ERROR_400}</label>`;
+                    if (jqXHR.responseJSON) {
+                        if (jqXHR.responseJSON.message) {
+                            str += `<label id="message-error" class="error" for="message">${jqXHR.responseJSON.message}</label>`;
+                        } else {
+                            $.each(jqXHR.responseJSON, function (key, value) {
+                                str += `<label id="${key}Dep-error" class="error" for="${key}Dep">${value}</label>`;
+                                $("#" + key + "Dep").addClass("error");
+                            });
+                        }
+                    } else {
+                        str += `<label id="message-error" class="error" for="message">${App.ERROR_400}</label>`;
+                    }
                 }
 
                 page.dialogs.alertDanger.modalDeposit.html(str);
@@ -718,19 +742,22 @@
 
                 let str = ``;
 
-                if (jqXHR.responseJSON) {
-                    if (jqXHR.responseJSON.message) {
-                        str += `<label id="message-error" class="error" for="message">${jqXHR.responseJSON.message}</label>`;
-                    } else {
-                        $.each(jqXHR.responseJSON, function (key, value) {
-                            str += `<label id="${key}Wd-error" class="error" for="${key}Wd">${value}</label>`;
-                            $("#" + key + "Wd").addClass("error");
-                        });
-                    }
+                if (jqXHR.status === 401) {
+                    str += `<label id="message-error" class="error" for="message">${App.ERROR_401}</label>`;
                 } else {
-                    str += `<label id="message-error" class="error" for="message">${App.ERROR_400}</label>`;
+                    if (jqXHR.responseJSON) {
+                        if (jqXHR.responseJSON.message) {
+                            str += `<label id="message-error" class="error" for="message">${jqXHR.responseJSON.message}</label>`;
+                        } else {
+                            $.each(jqXHR.responseJSON, function (key, value) {
+                                str += `<label id="${key}Wd-error" class="error" for="${key}Wd">${value}</label>`;
+                                $("#" + key + "Wd").addClass("error");
+                            });
+                        }
+                    } else {
+                        str += `<label id="message-error" class="error" for="message">${App.ERROR_400}</label>`;
+                    }
                 }
-
                 page.dialogs.alertDanger.modalWithdraw.html(str);
 
             }).always(function () {
@@ -784,17 +811,21 @@
 
                 let str = ``;
 
-                if (jqXHR.responseJSON) {
-                    if (jqXHR.responseJSON.message) {
-                        str += `<label id="message-error" class="error" for="message">${jqXHR.responseJSON.message}</label>`;
-                    } else {
-                        $.each(jqXHR.responseJSON, function (key, value) {
-                            str += `<label id="${key}Trf-error" class="error" for="${key}Trf">${value}</label>`;
-                            $("#" + key + "Trf").addClass("error");
-                        });
-                    }
+                if (jqXHR.status === 401) {
+                    str += `<label id="message-error" class="error" for="message">${App.ERROR_401}</label>`;
                 } else {
-                    str += `<label id="message-error" class="error" for="message">${App.ERROR_400}</label>`;
+                    if (jqXHR.responseJSON) {
+                        if (jqXHR.responseJSON.message) {
+                            str += `<label id="message-error" class="error" for="message">${jqXHR.responseJSON.message}</label>`;
+                        } else {
+                            $.each(jqXHR.responseJSON, function (key, value) {
+                                str += `<label id="${key}Trf-error" class="error" for="${key}Trf">${value}</label>`;
+                                $("#" + key + "Trf").addClass("error");
+                            });
+                        }
+                    } else {
+                        str += `<label id="message-error" class="error" for="message">${App.ERROR_400}</label>`;
+                    }
                 }
 
                 page.dialogs.alertDanger.modalTransfer.html(str);
@@ -808,7 +839,7 @@
             page.element.loader.removeClass("hide");
 
             $.ajax({
-                type: "POST",
+                type: "DELETE",
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
@@ -819,10 +850,15 @@
 
                 $("#tr_" + customer.id).remove();
             }).fail((jqXHR) => {
-                if (jqXHR.status === 403) {
-                    App.showError403();
+
+                if (jqXHR.status === 401) {
+                    App.showError401();
                 } else {
-                    App.showErrorAlert(App.ERROR_404);
+                    if (jqXHR.status === 403) {
+                        App.showError403();
+                    } else {
+                        App.showErrorAlert(jqXHR.responseJSON.message);
+                    }
                 }
             }).always(function () {
                 page.element.loader.addClass("hide");
@@ -832,7 +868,7 @@
         page.dialogs.close.modalCreateCustomer = () => {
             page.element.currentRow.val("");
             page.dialogs.alertDanger.modalCreate.empty().removeClass("show").addClass("hide");
-            $("#frmCreateCustomer input.error").removeClass("error");
+            page.dialogs.element.frmCreateCustomer.find("input.error").removeClass("error");
             page.dialogs.element.frmCreateCustomer[0].reset();
             page.dialogs.element.frmCreateCustomer.validate().resetForm();
         }
@@ -841,7 +877,7 @@
             page.element.currentRow.val("");
             $("table tr td").find(".select-tab.selected").removeClass("selected").addClass("unselected");
             page.dialogs.alertDanger.modalUpdate.empty().removeClass("show").addClass("hide");
-            $("#modalUpdateCustomer input.error").removeClass("error");
+            page.dialogs.element.frmUpdateCustomer.find("input.error").removeClass("error");
             page.dialogs.element.frmUpdateCustomer[0].reset();
             page.dialogs.element.frmUpdateCustomer.validate().resetForm();
         }
@@ -850,7 +886,7 @@
             page.element.currentRow.val("");
             $("table tr td").find(".select-tab.selected").removeClass("selected").addClass("unselected");
             page.dialogs.alertDanger.modalDeposit.empty().removeClass("show").addClass("hide");
-            $("#modalDeposit input.error").removeClass("error");
+            page.dialogs.element.frmDeposit.find("input.error").removeClass("error");
             page.dialogs.element.frmDeposit[0].reset();
             page.dialogs.element.frmDeposit.validate().resetForm();
         }
@@ -859,7 +895,7 @@
             page.element.currentRow.val("");
             $("table tr td").find(".select-tab.selected").removeClass("selected").addClass("unselected");
             page.dialogs.alertDanger.modalWithdraw.empty().removeClass("show").addClass("hide");
-            $("#modalWithdraw input.error").removeClass("error");
+            page.dialogs.element.frmWithdraw.find("input.error").removeClass("error");
             page.dialogs.element.frmWithdraw[0].reset();
             page.dialogs.element.frmWithdraw.validate().resetForm();
         }
@@ -868,7 +904,7 @@
             page.element.currentRow.val("");
             $("table tr td").find(".select-tab.selected").removeClass("selected").addClass("unselected");
             page.dialogs.alertDanger.modalTransfer.empty().removeClass("show").addClass("hide");
-            $("#modalTransfer input.error").removeClass("error");
+            page.dialogs.element.frmTransfer.find("input.error").removeClass("error");
             page.dialogs.element.frmTransfer[0].reset();
             page.dialogs.element.frmTransfer.validate().resetForm();
         }
@@ -916,16 +952,13 @@
 
 
             page.element.btnShowCreateForm.on("click", function () {
-                delete customer.id;
-                delete customer.balance;
-                delete locationRegion.id;
                 $("table tr td").find(".select-tab.selected").removeClass("selected").addClass("unselected");
-                page.element.footer.html("");
+                page.element.footer.empty();
                 page.commands.showCreateModal();
             });
 
             page.element.footer.on("click", "button", function () {
-                page.element.footer.html("");
+                page.element.footer.empty();
             });
 
             page.element.footer.on("click", "button.edit", function () {
@@ -953,23 +986,23 @@
 
 
             page.dialogs.element.btnCreateCustomer.on("click", function () {
-                page.dialogs.element.frmCreateCustomer.submit();
+                page.dialogs.element.frmCreateCustomer.trigger("submit");
             });
 
             page.dialogs.element.btnUpdateCustomer.on("click", function () {
-                page.dialogs.element.frmUpdateCustomer.submit();
+                page.dialogs.element.frmUpdateCustomer.trigger("submit");
             });
 
             page.dialogs.element.btnDepositMoney.on("click", function () {
-                page.dialogs.element.frmDeposit.submit();
+                page.dialogs.element.frmDeposit.trigger("submit");
             });
 
             page.dialogs.element.btnWithdrawMoney.on("click", function () {
-                page.dialogs.element.frmWithdraw.submit();
+                page.dialogs.element.frmWithdraw.trigger("submit");
             });
 
             page.dialogs.element.btnTransferMoney.on("click", function () {
-                page.dialogs.element.frmTransfer.submit();
+                page.dialogs.element.frmTransfer.trigger("submit");
             });
 
 
@@ -1003,12 +1036,12 @@
             });
 
             page.element.logout.on("click", function () {
-                $.removeCookie("JWT");
+                $.removeCookie('JWT', { path: '/', domain: location.hostname });
             });
 
         }
 
-        $(document).ready(function () {
+        $(function () {
             page.loadData.getAllCustomers().then(function () {
                 page.commands.formatNumber();
             });

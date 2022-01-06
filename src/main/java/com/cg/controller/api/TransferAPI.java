@@ -1,7 +1,6 @@
 package com.cg.controller.api;
 
-import com.cg.model.dto.ITransferDTO;
-import com.cg.model.dto.SumFeesAmountDTO;
+import com.cg.model.dto.*;
 import com.cg.service.transfer.ITransferService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,19 +20,14 @@ public class TransferAPI {
     private ITransferService transferService;
 
     @GetMapping
-    public ResponseEntity<?> findAll() {
-        try {
-            Iterable<ITransferDTO> iTransferDTOS = transferService.findAllITransferDTO();
+    public ResponseEntity<?> findAllTransaction() {
+        List<ITransferFullDTO> transferFullDTOS = transferService.findAllITransferFullDTO();
 
-            if (((List) iTransferDTOS).isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-
-            return new ResponseEntity<>(iTransferDTOS, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (transferFullDTOS.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
+        return new ResponseEntity<>(transferFullDTOS, HttpStatus.OK);
     }
 
     @GetMapping("/sum-fees-amount")

@@ -55,7 +55,7 @@ public class AuthAPI {
         if (bindingResult.hasErrors())
             return appUtils.mapErrorToResponse(bindingResult);
 
-        Optional<UserDTO> optUser = Optional.ofNullable(userService.findUserDTOByUsername(userDTO.getUsername()));
+        Optional<UserDTO> optUser = userService.findUserDTOByUsername(userDTO.getUsername());
 
         if (optUser.isPresent()) {
             throw new EmailExistsException("Email already exists");
@@ -86,7 +86,7 @@ public class AuthAPI {
 
         String jwt = jwtService.generateTokenLogin(authentication);
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User currentUser = userService.findByUsername(user.getUsername()).get();
+        User currentUser = userService.getByUsername(user.getUsername());
 
         JwtResponse jwtResponse = new JwtResponse(
                 jwt,
@@ -101,8 +101,6 @@ public class AuthAPI {
                 .secure(false)
                 .path("/")
                 .maxAge(60 * 1000)
-//                .domain("spb-bank-transaction-jwt.herokuapp.com")
-//                .domain("bank-transaction.azurewebsites.net")
                 .domain("localhost")
                 .build();
 
@@ -114,4 +112,5 @@ public class AuthAPI {
                 .body(jwtResponse);
 
     }
+
 }

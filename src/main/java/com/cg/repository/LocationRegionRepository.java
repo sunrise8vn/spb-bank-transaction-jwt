@@ -7,7 +7,19 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface LocationRegionRepository extends JpaRepository<LocationRegion, Long> {
 
-    @Query("SELECT NEW com.cg.model.dto.LocationRegionDTO (lr.id, lr.provinceId, lr.provinceName, lr.districtId, lr.districtName, lr.wardId, lr.wardName, lr.address) FROM LocationRegion lr WHERE lr.id = ?1 ")
-    LocationRegionDTO findLocationRegionDTOById(Long id);
+    @Query("SELECT NEW com.cg.model.dto.LocationRegionDTO (" +
+                "lr.id, " +
+                "lr.provinceId, " +
+                "lr.provinceName, " +
+                "lr.districtId, " +
+                "lr.districtName, " +
+                "lr.wardId, " +
+                "lr.wardName, " +
+                "lr.address" +
+            ") " +
+            "FROM LocationRegion lr " +
+            "WHERE lr.id = ?1 "
+    )
+    LocationRegionDTO getLocationRegionDTOById(Long id);
 
 }

@@ -5,6 +5,7 @@ import com.cg.model.dto.*;
 import com.cg.service.IGeneralService;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 public interface ICustomerService extends IGeneralService<Customer> {
@@ -13,25 +14,23 @@ public interface ICustomerService extends IGeneralService<Customer> {
 
     Customer update(Customer customer);
 
-    Iterable<CustomerDTO> findAllCustomerDTOByDeletedIsFalse();
+    List<CustomerDTO> findAllCustomerDTOByDeletedIsFalse();
 
     Boolean existsByEmail(String email);
 
-    CustomerDTO findCustomerDTOByEmail(String email);
+    Boolean existsByEmailAndIdIsNot(String email, Long id);
 
-    CustomerDTO findCustomerDTOByEmailAndIdIsNot(String email, Long id);
+    List<Customer> findAllByDeletedIsFalse();
 
-    Iterable<Customer> findAllByDeletedIsFalse();
+    CustomerDTO getCustomerDTOById(Long id);
 
-    CustomerDTO findCustomerDTOById(Long id);
+    Optional<CustomerDTO> findCustomerDTOById(Long id);
 
     Optional<DepositDTO> findDepositDTOById(Long id);
 
     Optional<WithdrawDTO> findWithdrawDTOById(Long id);
 
-    Iterable<RecipientDTO> findAllRecipientDTOByIdWithOutSender(Long id);
-
-    Iterable<RecipientDTO> findAllRecipientDTOByIdWithOutSenderAndDeletedIsFalse(Long id);
+    List<RecipientDTO> findAllRecipientDTOByIdWithOutSenderAndDeletedIsFalse(Long id);
 
     CustomerDTO doDeposit(DepositDTO depositDTO);
 

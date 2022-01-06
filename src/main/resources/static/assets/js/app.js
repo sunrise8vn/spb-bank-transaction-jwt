@@ -4,10 +4,11 @@ class App {
 
     static BASE_URL_AUTH = this.DOMAIN + "/api/auth";
     static BASE_URL_CUSTOMER = this.DOMAIN + "/api/customers";
-    static BASE_URL_PROVINCE = "https://vapi.vnappmob.com/api/province";
     static BASE_URL_TRANSFER = this.DOMAIN + "/api/transfers";
+    static BASE_URL_PROVINCE = "https://vapi.vnappmob.com/api/province";
 
     static ERROR_400 = "Giao dịch không thành công, vui lòng kiểm tra lại dữ liệu.";
+    static ERROR_401 = "Access Denied! Invalid credentials.";
     static ERROR_403 = "Access Denied! You are not authorized to perform this function.";
     static ERROR_404 = "An error occurred. Please try again later!";
     static ERROR_500 = "Lưu dữ liệu không thành công, vui lòng liên hệ quản trị hệ thống.";
@@ -45,6 +46,14 @@ class App {
             icon: 'error',
             title: 'Warning',
             text: t,
+        })
+    }
+
+    static showError401() {
+        Swal.fire({
+            icon: 'error',
+            title: 'Access Denied',
+            text: 'Invalid credentials!',
         })
     }
 
@@ -152,6 +161,23 @@ class Transfer {
         this.email = email;
         this.recipientId = recipientId;
         this.recipientName = recipientName;
+        this.balance = balance;
+        this.transferAmount = transferAmount;
+        this.fees = fees;
+        this.feesAmount = feesAmount;
+        this.transactionAmount = transactionAmount;
+    }
+}
+
+class TransferFull {
+    constructor(senderId, senderName, email, recipientId, recipientName, createdOn, createdAt, balance, transferAmount, fees, feesAmount, transactionAmount) {
+        this.senderId = senderId;
+        this.senderName = senderName;
+        this.email = email;
+        this.recipientId = recipientId;
+        this.recipientName = recipientName;
+        this.createdOn = createdOn;
+        this.createdAt = createdAt;
         this.balance = balance;
         this.transferAmount = transferAmount;
         this.fees = fees;

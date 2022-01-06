@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,7 +18,7 @@ public class LocationRegionImpl implements ILocationRegionService {
     private LocationRegionRepository locationRegionRepository;
 
     @Override
-    public Iterable<LocationRegion> findAll() {
+    public List<LocationRegion> findAll() {
         return null;
     }
 
@@ -32,8 +33,8 @@ public class LocationRegionImpl implements ILocationRegionService {
     }
 
     @Override
-    public LocationRegionDTO findLocationRegionDTOById(Long id) {
-        return locationRegionRepository.findLocationRegionDTOById(id);
+    public LocationRegionDTO getLocationRegionDTOById(Long id) {
+        return locationRegionRepository.getLocationRegionDTOById(id);
     }
 
     @Override

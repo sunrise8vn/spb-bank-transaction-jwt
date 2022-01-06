@@ -22,7 +22,7 @@
                             </a>
                             <div class="dropdown-menu dropdown-menu-right profile-dropdown">
                                 <div class="dropdown-header">
-                                    <h6 class="text-overflow m-0">Welcome !</h6>
+                                    <h6 class="text-overflow m-0">Welcome <span th:text="${username}" style="color: #ff9900"></span> !</h6>
                                 </div>
 
                                 <a href="javascript:void(0);" class="dropdown-item notify-item">
@@ -44,21 +44,27 @@
                             </div>
                         </li>
                     </ul>
-                    <a href="/customers" class="btn btn-outline-light"><i class="fa fa-list" aria-hidden="true"></i> <span>Customer list</span></a>
+                    <a href="/customers" class="btn btn-outline-light">
+                        <i class="fa fa-list" aria-hidden="true"></i>
+                        <span>Customer list</span>
+                    </a>
                 </div>
             </div>
         </header>
         <div class="box-body">
-            <textarea style="display:none" id="tempTransfer">
+            <textarea id="tempTransfer" style="display:none">
                 <tr>
                     <td class="text-center">{0}</td>
                     <td class="text-center">{1}</td>
-                    <td>{2}</td>
+                    <td class="text-center">{2}</td>
                     <td class="text-center">{3}</td>
-                    <td>{4}</td>
-                    <td class="text-end num-comma pr-20">{5}</td>
+                    <td class="text-center">{4}</td>
+                    <td class="text-center">{5}</td>
                     <td class="text-center">{6}</td>
                     <td class="text-end num-comma pr-20">{7}</td>
+                    <td class="text-center">{8}</td>
+                    <td class="text-end num-comma pr-20">{9}</td>
+                    <td class="text-end num-comma pr-20">{10}</td>
                 </tr>
             </textarea>
             <table id="tbListTransfers" class="table table-hover">
@@ -69,20 +75,24 @@
                         <th class="text-center">Sender Name</th>
                         <th class="text-center">Recipient ID</th>
                         <th class="text-center">Recipient Name</th>
+                        <th class="text-center">Date</th>
+                        <th class="text-center">Time</th>
                         <th class="text-center">Transfer Amount ($)</th>
                         <th class="text-center">Fees (%)</th>
                         <th class="text-center">Fees Amount ($)</th>
+                        <th class="text-center">Total Amount ($)</th>
                     </tr>
                 </thead>
                 <tbody>
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="5"></td>
+                        <td colspan="7"></td>
                         <td class="text-center fw-bold">Total Fees Amount:</td>
                         <td colspan="2" class="text-end fw-bold pr-20" style="font-size: 24px">
                             <span id="spSumFeesAmount"></span>
                         </td>
+                        <td></td>
                     </tr>
                 </tfoot>
             </table>
@@ -90,6 +100,8 @@
     </div>
 
     <div class="loader"></div>
+
+    <th:block th:replace="/layout/script :: script" />
 
     <script type="text/javascript" src="/assets/js/app.js"></script>
 
@@ -101,8 +113,7 @@
             },
             element: {},
             loadData: {},
-            commands: {},
-            initializeControlEvent: () => {}
+            commands: {}
         }
 
         page.element.logout = $(".profile-dropdown a.logout");
@@ -111,11 +122,11 @@
         page.element.frmListTransfer = $("#tbListTransfers tbody");
         page.element.spSumFeesAmount = $("#spSumFeesAmount");
 
-        let transfer = new Transfer();
-        let tempTransfer = jQuery.validator.format($.trim(page.element.tempTransfer.val()));
+        let transfer = new TransferFull();
+        let tempTransfer = jQuery.validator.format($.trim(page.element.tempTransfer.val().toString()));
 
         page.commands.addRow = (index) => {
-            page.element.frmListTransfer.prepend($(tempTransfer(index, transfer.senderId, transfer.senderName, transfer.recipientId, transfer.recipientName, transfer.transferAmount, transfer.fees, transfer.feesAmount)));
+            page.element.frmListTransfer.prepend($(tempTransfer(index, transfer.senderId, transfer.senderName, transfer.recipientId, transfer.recipientName, transfer.createdOn, transfer.createdAt, transfer.transferAmount, transfer.fees, transfer.feesAmount, transfer.transactionAmount)));
         }
 
         page.loadData.getAllTransfers = () => {
@@ -126,6 +137,8 @@
 
                 $.each(data, (index, item) => {
                     transfer = item;
+                    transfer.createdOn = moment(transfer.createdOn, "YYYY-MM-DD").format("DD-MM-YYYY")
+                    transfer.createdAt = moment(transfer.createdAt, "YYYY-MM-DD HH:mm:ss").format("HH:mm:ss")
                     page.commands.addRow(index + 1);
                 });
 
@@ -162,11 +175,11 @@
             });
 
             page.element.logout.on("click", function () {
-                $.removeCookie("JWT");
+                $.removeCookie('JWT', { path: '/', domain: location.hostname });
             });
         }
 
-        $(document).ready(function () {
+        $(function () {
             page.loadData.getAllTransfers();
             page.loadData.getSumFeesAmount();
             page.initializeControlEvent();

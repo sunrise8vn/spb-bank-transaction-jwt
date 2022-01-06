@@ -6,7 +6,6 @@ import com.cg.exception.ResourceNotFoundException;
 import com.cg.model.Customer;
 import com.cg.model.dto.*;
 import com.cg.service.customer.ICustomerService;
-import com.cg.service.locationRegion.ILocationRegionService;
 import com.cg.service.transfer.ITransferService;
 import com.cg.utils.AppUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +32,6 @@ public class CustomerAPI {
     private ICustomerService customerService;
 
     @Autowired
-    private ILocationRegionService locationRegionService;
-
-    @Autowired
     private ITransferService transferService;
 
     @Autowired
@@ -43,24 +39,20 @@ public class CustomerAPI {
 
 
     @GetMapping
-    public ResponseEntity<Iterable<?>> findAll() {
-        try {
-            Iterable<CustomerDTO> customerDTOS = customerService.findAllCustomerDTOByDeletedIsFalse();
+    public ResponseEntity<List<?>> findAll() {
 
-            if (((List) customerDTOS).isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
+        List<CustomerDTO> customerDTOS = customerService.findAllCustomerDTOByDeletedIsFalse();
 
-            return new ResponseEntity<>(customerDTOS, HttpStatus.OK);
-
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (customerDTOS.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+
+        return new ResponseEntity<>(customerDTOS, HttpStatus.OK);
     }
 
     @GetMapping("/edit/{id}")
     public ResponseEntity<?> showUpdateForm(@PathVariable Long id) {
-        Optional<CustomerDTO> customerDTO = Optional.ofNullable(customerService.findCustomerDTOById(id));
+        Optional<CustomerDTO> customerDTO = customerService.findCustomerDTOById(id);
 
         if (customerDTO.isPresent()) {
 
@@ -102,14 +94,14 @@ public class CustomerAPI {
     @GetMapping("/transfer/{id}")
     public ResponseEntity<?> showTransferForm(@PathVariable Long id) {
 
-        Optional<TransferDTO> transferDTO = Optional.ofNullable(transferService.findTransferDTOById(id));
+        Optional<TransferDTO> transferDTO = transferService.findTransferDTOById(id);
 
-        Iterable<RecipientDTO> recipientDTOS = customerService.findAllRecipientDTOByIdWithOutSenderAndDeletedIsFalse(id);
+        List<RecipientDTO> recipientDTOS = customerService.findAllRecipientDTOByIdWithOutSenderAndDeletedIsFalse(id);
 
         if (transferDTO.isPresent()) {
             Map<String, Object> result = new HashMap<>();
-            result.put("transferDTO", transferDTO.get());
-            result.put("recipientDTOS", recipientDTOS);
+            result.put("transfer", transferDTO.get());
+            result.put("recipients", recipientDTOS);
 
             return new ResponseEntity<>(result, HttpStatus.OK);
 
@@ -125,9 +117,9 @@ public class CustomerAPI {
         if (bindingResult.hasErrors())
             return appUtils.mapErrorToResponse(bindingResult);
 
-        Optional<CustomerDTO> optCustomer = Optional.ofNullable(customerService.findCustomerDTOByEmail(customerDTO.getEmail()));
+        boolean existsEmail = customerService.existsByEmail(customerDTO.getEmail());
 
-        if (optCustomer.isPresent()) {
+        if (existsEmail) {
             throw new EmailExistsException("Email already exists");
         }
 
@@ -145,16 +137,16 @@ public class CustomerAPI {
         }
     }
 
-    @PostMapping("/edit")
+    @PutMapping("/edit")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<?> updateCustomer(@Valid @RequestBody CustomerDTO customerDTO, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors())
             return appUtils.mapErrorToResponse(bindingResult);
 
-        Optional<CustomerDTO> optCustomer = Optional.ofNullable(customerService.findCustomerDTOByEmailAndIdIsNot(customerDTO.getEmail(), customerDTO.getId()));
+        boolean existsEmail = customerService.existsByEmailAndIdIsNot(customerDTO.getEmail(), customerDTO.getId());
 
-        if (optCustomer.isPresent()) {
+        if (existsEmail) {
             throw new EmailExistsException("Email already exists");
         }
 
@@ -191,7 +183,7 @@ public class CustomerAPI {
         if (bindingResult.hasErrors())
             return appUtils.mapErrorToResponse(bindingResult);
 
-        Optional<CustomerDTO> customer = Optional.ofNullable(customerService.findCustomerDTOById(withdrawDTO.getCustomerId()));
+        Optional<CustomerDTO> customer = customerService.findCustomerDTOById(withdrawDTO.getCustomerId());
 
         if (customer.isPresent()) {
             BigDecimal current_balance = customer.get().getBalance();
@@ -220,7 +212,7 @@ public class CustomerAPI {
         if (bindingResult.hasErrors())
             return appUtils.mapErrorToResponse(bindingResult);
 
-        Optional<CustomerDTO> sender = Optional.ofNullable(customerService.findCustomerDTOById(transferDTO.getSenderId()));
+        Optional<CustomerDTO> sender = customerService.findCustomerDTOById(transferDTO.getSenderId());
 
         if (sender.isPresent()) {
             BigDecimal sender_balance = sender.get().getBalance();
@@ -229,7 +221,7 @@ public class CustomerAPI {
             BigDecimal feeAmount = transferAmount.divide(BigDecimal.valueOf(fees));
             BigDecimal transactionAmount = transferAmount.add(feeAmount);
 
-            Optional<CustomerDTO> recipient = Optional.ofNullable(customerService.findCustomerDTOById(transferDTO.getSenderId()));
+            Optional<CustomerDTO> recipient = customerService.findCustomerDTOById(transferDTO.getSenderId());
 
             if (recipient.isPresent()) {
                 if (sender_balance.compareTo(transactionAmount) >= 0) {
@@ -240,8 +232,8 @@ public class CustomerAPI {
 
                         customerService.doTransfer(transferDTO, sender.get(), recipient.get());
 
-                        CustomerDTO senderSuccess = customerService.findCustomerDTOById(transferDTO.getSenderId());
-                        CustomerDTO recipientSuccess = customerService.findCustomerDTOById(transferDTO.getRecipientId());
+                        CustomerDTO senderSuccess = customerService.getCustomerDTOById(transferDTO.getSenderId());
+                        CustomerDTO recipientSuccess = customerService.getCustomerDTOById(transferDTO.getRecipientId());
 
                         Map<String, Object> result = new HashMap<>();
                         result.put("sender", senderSuccess);
@@ -263,7 +255,7 @@ public class CustomerAPI {
         }
     }
 
-    @PostMapping("/suspend/{id}")
+    @DeleteMapping("/suspend/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<?> doSuspend(@PathVariable Long id) {
         Optional<Customer> customer = customerService.findById(id);
@@ -282,4 +274,5 @@ public class CustomerAPI {
             throw new DataInputException("Invalid customer information");
         }
     }
+
 }

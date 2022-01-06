@@ -79,7 +79,10 @@
     </div>
     <div class="runway"></div>
     <img src="/assets/images/plane/airbus_a380.png" class="plane" alt="">
-    <div id="speed" style="top: -200px; width: 100px; position: relative; color: #ed8b8b;"><span>250</span> km/h</div>
+    <div id="speed" style="top: -200px; width: 100px; position: relative; color: #ed8b8b;">
+        <span>250</span>
+        km/h
+    </div>
 </section>
 
 <script type="text/javascript" src="/assets/js/jquery-3.6.0.js"></script>
@@ -94,9 +97,7 @@
             login: App.BASE_URL_AUTH + "/login",
         },
         element: {},
-        commands: {},
-        initializeControlEvent: () => {
-        }
+        commands: {}
     }
 
     let arrPlane = [
@@ -121,8 +122,11 @@
             "code": "airbus_a380"
         }
     ];
+
     let curIdx = 0;
-    let speed, speedUp, speedDown;
+    let speed,
+        speedUp,
+        speedDown;
 
     page.element.section = $("section");
     page.element.frmLogin = $("#frmLogin");
@@ -148,6 +152,7 @@
         page.element.frmLogin.css("left", "50px");
         page.element.frmRegister.css("left", "450px");
         page.element.btnBox.css("left", 0);
+
         setTimeout(function () {
             page.element.loginBoxBtn.css("color", "#fff");
             page.element.registerBoxBtn.css("color", "#000");
@@ -346,7 +351,7 @@
         page.commands.speedHandle();
     }
 
-    $(document).ready(function () {
+    $(function () {
         page.initializeControlEvent();
     });
 

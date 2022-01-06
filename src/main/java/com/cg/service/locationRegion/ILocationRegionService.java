@@ -5,5 +5,5 @@ import com.cg.model.dto.LocationRegionDTO;
 import com.cg.service.IGeneralService;
 
 public interface ILocationRegionService extends IGeneralService<LocationRegion> {
-    LocationRegionDTO findLocationRegionDTOById(Long id);
+    LocationRegionDTO getLocationRegionDTOById(Long id);
 }

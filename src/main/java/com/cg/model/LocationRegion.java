@@ -23,22 +23,22 @@ public class LocationRegion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "province_id", nullable= false)
     private String provinceId;
 
-    @Column(nullable = false)
+    @Column(name = "province_name", nullable= false)
     private String provinceName;
 
-    @Column(nullable = false)
+    @Column(name = "district_id", nullable= false)
     private String districtId;
 
-    @Column(nullable = false)
+    @Column(name = "district_name", nullable= false)
     private String districtName;
 
-    @Column
+    @Column(name = "ward_id")
     private String wardId;
 
-    @Column
+    @Column(name = "ward_name")
     private String wardName;
 
     @Column(nullable = false)

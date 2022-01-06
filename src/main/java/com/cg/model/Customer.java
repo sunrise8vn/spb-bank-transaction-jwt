@@ -1,11 +1,14 @@
 package com.cg.model;
 
 import com.cg.model.dto.CustomerDTO;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedBy;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
@@ -32,27 +35,27 @@ public class Customer extends BaseEntity {
 
     private String phone;
 
-    @Digits(integer = 12, fraction = 0)
+    @Digits(integer = 14, fraction = 2)
     @Column(updatable = false)
     private BigDecimal balance;
 
 
     @OneToOne
-    @JoinColumn(name = "location_region_id", referencedColumnName = "id", unique = true, nullable = false)
+    @JoinColumn(name = "location_region_id", referencedColumnName = "id", nullable = false)
     private LocationRegion locationRegion;
 
-
-    @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "customer")
     private Set<Deposit> deposits;
 
-    @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "customer")
     private Set<Withdraw> withdraws;
 
-    @OneToMany(mappedBy = "sender", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "sender")
     private Set<Transfer> sender;
 
-    @OneToMany(mappedBy = "recipient", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "recipient")
     private Set<Transfer> recipient;
+
 
     @Override
     public String toString() {

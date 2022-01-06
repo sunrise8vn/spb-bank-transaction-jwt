@@ -4,9 +4,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.web.servlet.ModelAndView;
-
 import javax.servlet.http.HttpServletRequest;
-import java.security.Principal;
+
 
 @Controller
 public class HandleErrorController implements ErrorController {
@@ -31,6 +30,11 @@ public class HandleErrorController implements ErrorController {
                 errorMsg = "Http Status Code: 401. Unauthorized";
                 break;
             }
+            case 403: {
+                title = "Forbidden";
+                errorMsg = "Http Status Code: 403. Access Denied!";
+                break;
+            }
             case 404: {
                 title = "Resource not found";
                 errorMsg = "Http Status Code: 404. Resource not found";
@@ -40,6 +44,11 @@ public class HandleErrorController implements ErrorController {
             case 405: {
                 title = "Method Not Allowed";
                 errorMsg = "Http Status Code: 405. Method Not Allowed";
+                break;
+            }
+            case 409: {
+                title = "Data Conflict";
+                errorMsg = "Http Status Code: 409. Data Conflict";
                 break;
             }
             case 500: {

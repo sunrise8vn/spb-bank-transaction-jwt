@@ -24,14 +24,13 @@ public class Withdraw extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
-
-
     @Digits(integer = 12, fraction = 0)
     @Column(name = "transaction_amount", nullable= false)
     private BigDecimal transactionAmount;
+
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 
 
     @Override

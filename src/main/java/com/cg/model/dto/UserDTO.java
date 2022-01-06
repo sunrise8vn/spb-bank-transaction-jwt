@@ -40,7 +40,7 @@ public class UserDTO {
                 .setId(id)
                 .setUsername(username)
                 .setPassword(password)
-                .setRoles(role.toRole());
+                .setRole(role.toRole());
     }
 
 }

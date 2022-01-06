@@ -64,16 +64,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/", "/api/auth/login", "/api/auth/register", "/login", "/logout").permitAll()
                 .antMatchers("/transfers").hasAnyAuthority("ADMIN")
-                .antMatchers("/resources/**", "/assets/**",
+                .antMatchers("/test").permitAll()
+                .antMatchers("/resources/**", "/assets/**").permitAll()
+                .antMatchers(
                         "/v2/api-docs",
                         "/swagger-resources/configuration/ui",
                         "/configuration/ui",
                         "/swagger-resources",
                         "/swagger-resources/configuration/security",
                         "/configuration/security",
-                        "/swagger-ui.html",
-                        "/webjars/**").permitAll()
-
+                        "/swagger-ui/**"
+                ).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -86,7 +87,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login")
-//                .logoutSuccessHandler(new CookieClearingLogoutHandler("JWT"))
                 .deleteCookies("JWT")
                 .invalidateHttpSession(true)
                 .and()

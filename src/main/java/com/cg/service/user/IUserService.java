@@ -8,7 +8,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import java.util.Optional;
 
 public interface IUserService extends IGeneralService<User>, UserDetailsService {
+    User getByUsername(String username);
+
     Optional<User> findByUsername(String username);
 
-    UserDTO findUserDTOByUsername(String username);
+    Optional<UserDTO> findUserDTOByUsername(String username);
 }

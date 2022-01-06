@@ -15,7 +15,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
+
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -29,28 +29,37 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private String getBearerTokenRequest(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            return authHeader.replace("Bearer ", "");
+        if (authHeader != null) {
+            if (authHeader.startsWith("Bearer ")) {
+                return authHeader.replace("Bearer ", "");
+            }
+            return authHeader;
         }
 
         return null;
     }
 
     private String getCookieValue(HttpServletRequest req) {
-        return Arrays.stream(req.getCookies())
-                .filter(c -> c.getName().equals("JWT"))
-                .findFirst()
-                .map(Cookie::getValue)
-                .orElse(null);
+        Cookie[] cookies = req.getCookies();
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("JWT")) {
+                    return cookie.getValue();
+                }
+            }
+        }
+
+        return null;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+
         try {
             String bearerToken = getBearerTokenRequest(request);
-
-            final String authorizationCookie = getCookieValue(request);
+            String authorizationCookie = getCookieValue(request);
 
             setAuthentication(request, bearerToken);
             setAuthentication(request, authorizationCookie);

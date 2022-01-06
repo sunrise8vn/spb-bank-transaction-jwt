@@ -1,7 +1,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <th:block th:fragment="frm_create">
-    <textarea style="display:none" id="tempOption">
+    <textarea id="tempOption" style="display:none">
         <option value="{0}">{1}</option>
     </textarea>
 
@@ -14,7 +14,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="modal-alert-danger hide"></div>
-                    <form id="frmCreateCustomer" method="post">
+                    <form id="frmCreateCustomer">
                         <fieldset class="row g-3">
                             <div class="col-md-4">
                                 <label class="form-label">Full name</label>

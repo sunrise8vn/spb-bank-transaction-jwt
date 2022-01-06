@@ -24,14 +24,6 @@ public class Transfer extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "sender_id")
-    private Customer sender;
-
-    @ManyToOne
-    @JoinColumn(name = "recipient_id")
-    private Customer recipient;
-
     @Digits(integer = 12, fraction = 0)
     @Column(name = "transfer_amount", nullable= false)
     private BigDecimal transferAmount;
@@ -46,6 +38,14 @@ public class Transfer extends BaseEntity {
     @Digits(integer = 12, fraction = 0)
     @Column(name = "transaction_amount", nullable= false)
     private BigDecimal transactionAmount;
+
+    @ManyToOne
+    @JoinColumn(name = "sender_id")
+    private Customer sender;
+
+    @ManyToOne
+    @JoinColumn(name = "recipient_id")
+    private Customer recipient;
 
 
     public Transfer(Customer sender, Customer recipient, BigDecimal transferAmount, int fees, BigDecimal transactionAmount) {

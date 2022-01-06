@@ -1,5 +1,5 @@
 
-$(document).ready(function () {
+$(function () {
     page.dialogs.element.frmCreateCustomer.validate({
         onkeyup: function(element) { $(element).valid() },
         onclick: false,
@@ -89,9 +89,9 @@ $(document).ready(function () {
         },
         messages: {
             fullNameUp: {
-                required: "Bắt buộc nhập tên đầy đủ",
-                minlength: "Hãy nhập tối thiểu 5 ký tự",
-                maxlength: "Hãy nhập tối đa 50 ký tự"
+                required: "Vui lòng nhập tên đầy đủ",
+                minLength: jQuery.validator.format("Họ tên tối thiểu {0} ký tự"),
+                maxLength: jQuery.validator.format("Họ tên tối đa {0} ký tự")
             },
             emailUp: {
                 required: "Vui lòng nhập email đầy đủ",
@@ -131,7 +131,7 @@ $(document).ready(function () {
         },
         messages: {
             transactionAmountDep: {
-                required: "Không được để trống trường này",
+                required: "Vui lòng hoàn thiện thông tin này",
                 maxlength: "Số tiền tối đa là 10.000.000.000"
             }
         },
@@ -166,7 +166,7 @@ $(document).ready(function () {
         },
         messages: {
             transactionAmountWd: {
-                required: "Không được để trống trường này",
+                required: "Vui lòng hoàn thiện thông tin này",
                 maxlength: "Số tiền tối đa là 10.000.000.000"
             }
         },
@@ -201,7 +201,7 @@ $(document).ready(function () {
         },
         messages: {
             transferAmountTrf: {
-                required: "Không được để trống trường này",
+                required: "Vui lòng hoàn thiện thông tin này",
                 maxlength: "Số tiền tối đa là 10.000.000.000"
             }
         },

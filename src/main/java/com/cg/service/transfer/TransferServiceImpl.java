@@ -1,14 +1,13 @@
 package com.cg.service.transfer;
 
 import com.cg.model.Transfer;
-import com.cg.model.dto.ITransferDTO;
-import com.cg.model.dto.SumFeesAmountDTO;
-import com.cg.model.dto.TransferDTO;
+import com.cg.model.dto.*;
 import com.cg.repository.TransferRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,7 +18,7 @@ public class TransferServiceImpl implements ITransferService {
     private TransferRepository transferRepository;
 
     @Override
-    public Iterable<Transfer> findAll() {
+    public List<Transfer> findAll() {
         return null;
     }
 
@@ -34,13 +33,23 @@ public class TransferServiceImpl implements ITransferService {
     }
 
     @Override
-    public TransferDTO findTransferDTOById(Long id) {
+    public Optional<TransferDTO> findTransferDTOById(Long id) {
         return transferRepository.findTransferDTOById(id);
     }
 
     @Override
-    public Iterable<ITransferDTO> findAllITransferDTO() {
+    public List<ITransferDTO> findAllITransferDTO() {
         return transferRepository.findAllITransferDTO();
+    }
+
+    @Override
+    public List<TransferFullDTO> findAllTransferFullDTO() {
+        return transferRepository.findAllTransferFullDTO();
+    }
+
+    @Override
+    public List<ITransferFullDTO> findAllITransferFullDTO() {
+        return transferRepository.findAllITransferFullDTO();
     }
 
     @Override

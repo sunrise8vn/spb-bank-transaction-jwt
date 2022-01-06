@@ -26,8 +26,8 @@ public class User extends BaseEntity {
     private String password;
 
     @ManyToOne
-    @JoinColumn(name = "role_id")
-    private Role roles;
+    @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
+    private Role role;
 
     @Override
     public String toString() {
@@ -35,6 +35,7 @@ public class User extends BaseEntity {
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
+                ", role='" + role + '\'' +
                 '}';
     }
 
