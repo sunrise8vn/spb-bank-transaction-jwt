@@ -66,7 +66,7 @@ class App {
     }
 
     static formatNumber() {
-        $(".num-space").number(true, 0, ',', ' ');
+        $(".num-space").number(true, 0, ',', ' ')
         $(".num-point").number(true, 0, ',', '.');
         $(".num-comma").number(true, 0, ',', ',');
     }

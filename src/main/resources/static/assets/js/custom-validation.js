@@ -61,6 +61,7 @@ $(function () {
     page.dialogs.element.frmUpdateCustomer.validate({
         onkeyup: function(element) {$(element).valid()},
         onclick: false,
+        onfocusout: false,
         rules: {
             fullNameUp: {
                 required: true,
@@ -113,6 +114,7 @@ $(function () {
         rules: {
             transactionAmountDep: {
                 required: true,
+                isNumberWithSpace: true,
                 maxlength: 14
             }
         },
@@ -148,6 +150,7 @@ $(function () {
         rules: {
             transactionAmountWd: {
                 required: true,
+                isNumberWithSpace: true,
                 maxlength: 14
             }
         },
@@ -182,8 +185,8 @@ $(function () {
         rules: {
             transferAmountTrf: {
                 required: true,
-                maxlength: 14,
-                // number: true
+                isNumberWithSpace: true,
+                maxlength: 14
             }
         },
         errorLabelContainer: "#modalTransfer .modal-alert-danger",
@@ -209,4 +212,8 @@ $(function () {
             page.dialogs.commands.transferMoney();
         }
     });
+
+    $.validator.addMethod("isNumberWithSpace", function (value, element) {
+        return this.optional(element) || /^\s*[0-9,\s]+\s*$/i.test(value);
+    }, "Vui lòng nhập giá trị số");
 });

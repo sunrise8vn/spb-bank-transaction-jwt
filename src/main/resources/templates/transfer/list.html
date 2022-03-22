@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <title>Transfer money Information</title>
-    <th:block th:include="layout/head" />
+    <th:block th:include="layout/head :: head" />
 </head>
 <body>
     <div class="main-container">
@@ -52,21 +52,6 @@
             </div>
         </header>
         <div class="box-body">
-            <textarea id="tempTransfer" style="display:none">
-                <tr>
-                    <td class="text-center">{0}</td>
-                    <td class="text-center">{1}</td>
-                    <td class="text-center">{2}</td>
-                    <td class="text-center">{3}</td>
-                    <td class="text-center">{4}</td>
-                    <td class="text-center">{5}</td>
-                    <td class="text-center">{6}</td>
-                    <td class="text-end num-comma pr-20">{7}</td>
-                    <td class="text-center">{8}</td>
-                    <td class="text-end num-comma pr-20">{9}</td>
-                    <td class="text-end num-comma pr-20">{10}</td>
-                </tr>
-            </textarea>
             <table id="tbListTransfers" class="table table-hover">
                 <thead>
                     <tr>
@@ -101,7 +86,9 @@
 
     <div class="loader"></div>
 
-    <th:block th:replace="/layout/script :: script" />
+    <th:block th:include="transfer/temp_list_table :: temp_list_table"/>
+
+    <th:block th:replace="layout/script :: script" />
 
     <script type="text/javascript" src="/assets/js/app.js"></script>
 
@@ -139,6 +126,9 @@
                     transfer = item;
                     transfer.createdOn = moment(transfer.createdOn, "YYYY-MM-DD").format("DD-MM-YYYY")
                     transfer.createdAt = moment(transfer.createdAt, "YYYY-MM-DD HH:mm:ss").format("HH:mm:ss")
+
+                    $("#inpDate").val(moment("2022-02-19", "YYYY-MM-DD").format("YYYY-MM-DD"));
+
                     page.commands.addRow(index + 1);
                 });
 

@@ -64,7 +64,8 @@ public class LocationRegion {
     }
 
     public LocationRegionDTO toLocationRegionDTO() {
-        return new LocationRegionDTO().setId(id)
+        return new LocationRegionDTO()
+                .setId(id)
                 .setProvinceId(provinceId)
                 .setProvinceName(provinceName)
                 .setDistrictId(districtId)

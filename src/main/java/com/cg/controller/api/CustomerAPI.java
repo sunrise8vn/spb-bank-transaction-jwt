@@ -186,10 +186,10 @@ public class CustomerAPI {
         Optional<CustomerDTO> customer = customerService.findCustomerDTOById(withdrawDTO.getCustomerId());
 
         if (customer.isPresent()) {
-            BigDecimal current_balance = customer.get().getBalance();
+            BigDecimal currentBalance = customer.get().getBalance();
             BigDecimal transactionAmount = withdrawDTO.getTransactionAmount();
 
-            if (current_balance.compareTo(transactionAmount) >= 0) {
+            if (currentBalance.compareTo(transactionAmount) >= 0) {
                 try {
                     CustomerDTO customerDTO = customerService.doWithdraw(withdrawDTO);
 
@@ -212,19 +212,22 @@ public class CustomerAPI {
         if (bindingResult.hasErrors())
             return appUtils.mapErrorToResponse(bindingResult);
 
+        if (transferDTO.getSenderId().equals(transferDTO.getRecipientId()))
+            throw new DataInputException("Invalid sender and receiver information");
+
         Optional<CustomerDTO> sender = customerService.findCustomerDTOById(transferDTO.getSenderId());
 
         if (sender.isPresent()) {
-            BigDecimal sender_balance = sender.get().getBalance();
+            BigDecimal senderBalance = sender.get().getBalance();
             BigDecimal transferAmount = transferDTO.getTransferAmount();
             int fees = 10;
             BigDecimal feeAmount = transferAmount.divide(BigDecimal.valueOf(fees));
             BigDecimal transactionAmount = transferAmount.add(feeAmount);
 
-            Optional<CustomerDTO> recipient = customerService.findCustomerDTOById(transferDTO.getSenderId());
+            Optional<CustomerDTO> recipient = customerService.findCustomerDTOById(transferDTO.getRecipientId());
 
             if (recipient.isPresent()) {
-                if (sender_balance.compareTo(transactionAmount) >= 0) {
+                if (senderBalance.compareTo(transactionAmount) >= 0) {
                     try {
                         transferDTO.setFees(fees);
                         transferDTO.setFeesAmount(feeAmount);

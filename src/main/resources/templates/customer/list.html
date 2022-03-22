@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <title>Customer management</title>
-    <th:block th:include="layout/head"/>
+    <th:block th:include="layout/head :: head"/>
 </head>
 <body>
     <div class="main-container">
@@ -52,8 +52,6 @@
         </header>
         <div class="box-body">
 
-            <th:block th:include="customer/frm_list_table"/>
-
             <input type="hidden" id="currentRow"/>
 
             <table id="tbListCustomers" class="table table-hover">
@@ -82,19 +80,23 @@
 
     <div class="footer"></div>
 
-    <th:block th:include="customer/frm_create"/>
+    <th:block th:include="customer/temp_option :: temp_option"/>
 
-    <th:block th:include="customer/frm_update"/>
+    <th:block th:include="customer/temp_list_table :: temp_list_table"/>
 
-    <th:block th:include="customer/frm_deposit"/>
+    <th:block th:include="customer/frm_create :: frm_create"/>
 
-    <th:block th:include="customer/frm_withdraw"/>
+    <th:block th:include="customer/frm_update :: frm_update"/>
 
-    <th:block th:include="customer/frm_transfer"/>
+    <th:block th:include="customer/frm_deposit :: frm_deposit"/>
 
-    <th:block th:include="customer/footer"/>
+    <th:block th:include="customer/frm_withdraw :: frm_withdraw"/>
 
-    <th:block th:replace="/layout/script :: script" />
+    <th:block th:include="customer/frm_transfer :: frm_transfer"/>
+
+    <th:block th:include="customer/footer :: footer"/>
+
+    <th:block th:replace="layout/script :: script" />
 
     <script type="text/javascript" src="/assets/js/app.js"></script>
     <script type="text/javascript" src="/assets/js/custom-validation.js"></script>
