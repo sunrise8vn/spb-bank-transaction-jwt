@@ -16,7 +16,6 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "location_region")
-@Accessors(chain = true)
 public class LocationRegion {
 
     @Id

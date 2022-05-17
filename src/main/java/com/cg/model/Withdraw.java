@@ -17,7 +17,6 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Entity
 @Table(name = "withdraws")
-@Accessors(chain = true)
 public class Withdraw extends BaseEntity {
 
     @Id

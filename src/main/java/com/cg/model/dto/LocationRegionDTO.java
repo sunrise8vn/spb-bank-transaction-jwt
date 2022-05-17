@@ -11,7 +11,6 @@ import javax.validation.constraints.NotBlank;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Accessors(chain = true)
 public class LocationRegionDTO {
 
     Long id;

@@ -502,9 +502,8 @@
 
 
         page.dialogs.commands.createCustomer = () => {
-            delete customer.id;
-            delete customer.balance;
-            delete locationRegion.id;
+            customer.id = 0;
+            locationRegion.id = 0;
 
             locationRegion.provinceId = page.dialogs.element.province.val();
             locationRegion.provinceName = page.dialogs.element.province.find('option:selected').text();
@@ -513,6 +512,7 @@
             locationRegion.wardId = page.dialogs.element.ward.val();
             locationRegion.wardName = page.dialogs.element.ward.find('option:selected').text();
             locationRegion.address = page.dialogs.element.address.val();
+            customer.balance = 0;
 
             customer.fullName = page.dialogs.element.fullName.val();
             customer.email = page.dialogs.element.email.val();
@@ -866,6 +866,7 @@
                 page.element.loader.addClass("hide");
             });
         }
+
 
         page.dialogs.close.modalCreateCustomer = () => {
             page.element.currentRow.val("");

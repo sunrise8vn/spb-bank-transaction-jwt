@@ -124,10 +124,8 @@
 
                 $.each(data, (index, item) => {
                     transfer = item;
-                    transfer.createdOn = moment(transfer.createdOn, "YYYY-MM-DD").format("DD-MM-YYYY")
-                    transfer.createdAt = moment(transfer.createdAt, "YYYY-MM-DD HH:mm:ss").format("HH:mm:ss")
-
-                    $("#inpDate").val(moment("2022-02-19", "YYYY-MM-DD").format("YYYY-MM-DD"));
+                    transfer.createdOn = moment(transfer.createdOn, "YYYY-MM-DD").format("DD-MM-YYYY");
+                    transfer.createdAt = moment(transfer.createdAt, "YYYY-MM-DD HH:mm:ss").format("HH:mm:ss");
 
                     page.commands.addRow(index + 1);
                 });

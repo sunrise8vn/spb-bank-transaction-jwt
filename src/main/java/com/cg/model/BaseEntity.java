@@ -17,7 +17,8 @@ import java.util.Date;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity {
 
-    private boolean deleted = false;
+    @Column(columnDefinition = "boolean default false")
+    private boolean deleted;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

@@ -21,7 +21,6 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 @Table(name = "customers")
-@Accessors(chain = true)
 public class Customer extends BaseEntity {
 
     @Id

@@ -12,7 +12,6 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "users")
-@Accessors(chain = true)
 public class User extends BaseEntity {
 
     @Id

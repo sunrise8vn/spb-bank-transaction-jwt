@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 
 
 @Controller
@@ -28,11 +29,6 @@ public class HandleErrorController implements ErrorController {
             case 401: {
                 title = "Unauthorized";
                 errorMsg = "Http Status Code: 401. Unauthorized";
-                break;
-            }
-            case 403: {
-                title = "Forbidden";
-                errorMsg = "Http Status Code: 403. Access Denied!";
                 break;
             }
             case 404: {
@@ -67,11 +63,13 @@ public class HandleErrorController implements ErrorController {
         return (Integer) httpRequest.getAttribute("javax.servlet.error.status_code");
     }
 
-//    @RequestMapping("/403")
-//    public ModelAndView accessDenied(Principal user) {
-//        ModelAndView model = new ModelAndView("error/403");
-//        model.addObject("username", user.getName());
-//        return model;
-//    }
+    @RequestMapping("/403")
+    public ModelAndView accessDenied(Principal user) {
+        ModelAndView model = new ModelAndView("error/403");
+        String userName = user.getName();
+        userName = userName.substring(0, userName.indexOf("@"));
+        model.addObject("username", userName);
+        return model;
+    }
 
 }

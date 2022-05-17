@@ -7,11 +7,12 @@ class App {
     static BASE_URL_TRANSFER = this.DOMAIN + "/api/transfers";
     static BASE_URL_PROVINCE = "https://vapi.vnappmob.com/api/province";
 
-    static ERROR_400 = "Giao dịch không thành công, vui lòng kiểm tra lại dữ liệu.";
+    static ERROR_400 = "The operation failed, please check the data again.";
     static ERROR_401 = "Access Denied! Invalid credentials.";
     static ERROR_403 = "Access Denied! You are not authorized to perform this function.";
-    static ERROR_404 = "An error occurred. Please try again later!";
-    static ERROR_500 = "Lưu dữ liệu không thành công, vui lòng liên hệ quản trị hệ thống.";
+    static ERROR_404 = "This content has been removed or does not exist";
+    static ERROR_500 = "Data saving failed, please contact the system administrator.";
+
     static SUCCESS_CREATED = "Successful data generation !";
     static SUCCESS_UPDATED = "Data update successful !";
     static SUCCESS_DEPOSIT = "Successful deposit transaction !";

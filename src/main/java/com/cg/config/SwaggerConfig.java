@@ -35,8 +35,8 @@ public class SwaggerConfig {
                 .select()
 //                .apis(RequestHandlerSelectors.any())
                 .apis(RequestHandlerSelectors.basePackage("com.cg"))
-//                .paths(PathSelectors.any())
-                .paths(PathSelectors.ant("/api/**"))
+                .paths(PathSelectors.any())
+//                .paths(PathSelectors.ant("/api/**"))
                 .build();
     }
 

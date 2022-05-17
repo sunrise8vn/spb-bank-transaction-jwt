@@ -17,7 +17,6 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Entity
 @Table(name = "transfers")
-@Accessors(chain = true)
 public class Transfer extends BaseEntity {
 
     @Id

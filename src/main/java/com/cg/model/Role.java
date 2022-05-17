@@ -13,7 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "roles")
-@Accessors(chain = true)
 public class Role {
 
     @Id

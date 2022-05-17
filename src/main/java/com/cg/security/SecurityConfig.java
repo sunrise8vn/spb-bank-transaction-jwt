@@ -64,10 +64,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/", "/api/auth/login", "/api/auth/register", "/login", "/logout").permitAll()
                 .antMatchers("/transfers").hasAnyAuthority("ADMIN")
-                .antMatchers("/test").permitAll()
                 .antMatchers("/resources/**", "/assets/**").permitAll()
                 .antMatchers(
-                        "/v2/api-docs",
+                        "/v3/api-docs",
                         "/swagger-resources/configuration/ui",
                         "/configuration/ui",
                         "/swagger-resources",
@@ -92,8 +91,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .csrf().disable();
 
-        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling().accessDeniedHandler(customAccessDeniedHandler());
+        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class).exceptionHandling().accessDeniedPage("/403");
+
+//        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+//                .exceptionHandling().accessDeniedHandler(customAccessDeniedHandler());
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.cors();

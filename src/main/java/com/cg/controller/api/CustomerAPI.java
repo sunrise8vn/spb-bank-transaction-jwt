@@ -124,6 +124,7 @@ public class CustomerAPI {
         }
 
         customerDTO.setId(0);
+        customerDTO.getLocationRegion().setId(0L);
         customerDTO.setBalance(BigDecimal.valueOf(0));
 
         try {
@@ -170,7 +171,7 @@ public class CustomerAPI {
         try {
             CustomerDTO customerDTO = customerService.doDeposit(depositDTO);
 
-            return new ResponseEntity<>(customerDTO, HttpStatus.CREATED);
+            return new ResponseEntity<>(customerDTO, HttpStatus.OK);
 
         } catch (DataIntegrityViolationException e) {
             throw new DataInputException("Invalid deposit information");
