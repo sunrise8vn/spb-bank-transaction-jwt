@@ -9,6 +9,7 @@ target/
 /src/main/resources/application_Azure.properties
 /src/main/resources/application_DigitalOcean.properties
 /src/main/resources/application_Heroku.properties
+src\main\resources\application_Azure.properties
 
 ### STS ###
 .apt_generated
