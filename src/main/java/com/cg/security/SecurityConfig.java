@@ -77,13 +77,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/swagger-ui/**"
                 ).permitAll()
                 .anyRequest().authenticated()
-//                .and()
-//                .formLogin()
-//                .loginProcessingUrl("/login")
-//                .loginPage("/login")
-//                .usernameParameter("username")
-//                .passwordParameter("password")
-//                .defaultSuccessUrl("/")
+                .and()
+                .formLogin()
+                .loginProcessingUrl("/login")
+                .loginPage("/login")
+                .usernameParameter("username")
+                .passwordParameter("password")
+                .defaultSuccessUrl("/")
                 .and()
                 .logout()
                 .logoutUrl("/logout")
@@ -91,12 +91,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .deleteCookies("JWT")
                 .invalidateHttpSession(true)
                 ;
-
-//        http.anonymous().disable()
-//                .exceptionHandling()
-//                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
-
-//        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class).exceptionHandling().accessDeniedPage("/403");
 
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling().accessDeniedHandler(customAccessDeniedHandler());

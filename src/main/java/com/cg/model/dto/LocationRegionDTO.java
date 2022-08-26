@@ -17,19 +17,19 @@ public class LocationRegionDTO {
     @NotBlank(message = "The province is required")
     private String provinceId;
 
-//    @NotBlank(message = "The province name is required")
+    @NotBlank(message = "The province name is required")
     private String provinceName;
 
     @NotBlank(message = "The district is required")
     private String districtId;
 
-//    @NotBlank(message = "The district name is required")
+    @NotBlank(message = "The district name is required")
     private String districtName;
 
     @NotBlank(message = "The ward is required")
     private String wardId;
 
-//    @NotBlank(message = "The ward name is required")
+    @NotBlank(message = "The ward name is required")
     private String wardName;
 
     @NotBlank(message = "The address is required")

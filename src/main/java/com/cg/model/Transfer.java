@@ -19,19 +19,16 @@ public class Transfer extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Digits(integer = 12, fraction = 0)
-    @Column(name = "transfer_amount", nullable= false)
+    @Column(name = "transfer_amount", precision = 12, scale = 0, nullable = false)
     private BigDecimal transferAmount;
 
     @Column(nullable= false)
     private int fees;
 
-    @Digits(integer = 12, fraction = 0)
-    @Column(name = "fees_amount", nullable= false)
+    @Column(name = "fees_amount", precision = 12, scale = 0, nullable = false)
     private BigDecimal feesAmount;
 
-    @Digits(integer = 12, fraction = 0)
-    @Column(name = "transaction_amount", nullable= false)
+    @Column(name = "transaction_amount", precision = 12, scale = 0, nullable = false)
     private BigDecimal transactionAmount;
 
     @ManyToOne

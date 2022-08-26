@@ -27,8 +27,7 @@ public class Customer extends BaseEntity {
 
     private String phone;
 
-    @Digits(integer = 12, fraction = 0)
-    @Column(updatable = false)
+    @Column(precision = 12, scale = 0, updatable = false)
     private BigDecimal balance;
 
 

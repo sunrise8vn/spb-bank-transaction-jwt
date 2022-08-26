@@ -22,8 +22,7 @@ public class Deposit extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Digits(integer = 14, fraction = 2)
-    @Column(name = "transaction_amount", nullable= false)
+    @Column(name = "transaction_amount", precision = 12, scale = 0, nullable = false)
     private BigDecimal transactionAmount;
 
     @ManyToOne

@@ -263,7 +263,6 @@ public class CustomerAPI {
     @DeleteMapping("/deactivate/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<?> doDeactivate(@PathVariable Long id) {
-//        Optional<Customer> customer = customerService.findById(id);
 
         Optional<Customer> customer = customerService.findByIdAndDeletedIsFalse(id);
 

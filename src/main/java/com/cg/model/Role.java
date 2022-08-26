@@ -22,7 +22,6 @@ public class Role {
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
     private ERole name;
-//    private String name;
 
     @OneToMany(targetEntity = User.class, fetch = FetchType.EAGER)
     private List<User> users;

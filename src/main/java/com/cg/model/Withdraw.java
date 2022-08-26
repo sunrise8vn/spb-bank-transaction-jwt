@@ -22,8 +22,7 @@ public class Withdraw extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Digits(integer = 12, fraction = 0)
-    @Column(name = "transaction_amount", nullable= false)
+    @Column(name = "transaction_amount", precision = 12, scale = 0, nullable = false)
     private BigDecimal transactionAmount;
 
     @ManyToOne
