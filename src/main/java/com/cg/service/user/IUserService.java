@@ -13,4 +13,6 @@ public interface IUserService extends IGeneralService<User>, UserDetailsService 
     Optional<User> findByUsername(String username);
 
     Optional<UserDTO> findUserDTOByUsername(String username);
+
+    Boolean existsByUsername(String email);
 }

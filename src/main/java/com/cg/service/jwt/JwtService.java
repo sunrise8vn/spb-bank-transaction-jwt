@@ -15,7 +15,7 @@ import java.util.Date;
 public class JwtService {
 
     private static final String SECRET_KEY = "GoiTenToiNheBanThanHoiCoToiLuonCungChiaSotDeRoiTaLaiCoThemNiemTin";
-    private static final long JWT_TOKEN_VALIDITY = 1000L;
+    private static final long JWT_TOKEN_VALIDITY = 1000L * 60 * 60;
     private static final Logger logger = LoggerFactory.getLogger(JwtService.class.getName());
 
     public String generateTokenLogin(Authentication authentication) {
@@ -24,7 +24,7 @@ public class JwtService {
         return Jwts.builder()
                 .setSubject((userPrincipal.getUsername()))
                 .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + JWT_TOKEN_VALIDITY * 60 * 60))
+                .setExpiration(new Date((new Date()).getTime() + JWT_TOKEN_VALIDITY))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
     }

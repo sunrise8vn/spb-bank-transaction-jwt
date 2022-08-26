@@ -98,22 +98,22 @@
                 getAllTransfers: App.BASE_URL_TRANSFER,
                 getSumFeesAmount: App.BASE_URL_TRANSFER + "/sum-fees-amount"
             },
-            element: {},
+            elements: {},
             loadData: {},
             commands: {}
         }
 
-        page.element.logout = $(".profile-dropdown a.logout");
-        page.element.loader = $(".loader");
-        page.element.tempTransfer = $("#tempTransfer");
-        page.element.frmListTransfer = $("#tbListTransfers tbody");
-        page.element.spSumFeesAmount = $("#spSumFeesAmount");
+        page.elements.logout = $(".profile-dropdown a.logout");
+        page.elements.loader = $(".loader");
+        page.elements.tempTransfer = $("#tempTransfer");
+        page.elements.frmListTransfer = $("#tbListTransfers tbody");
+        page.elements.spSumFeesAmount = $("#spSumFeesAmount");
 
         let transfer = new TransferFull();
-        let tempTransfer = jQuery.validator.format($.trim(page.element.tempTransfer.val().toString()));
+        let tempTransfer = jQuery.validator.format($.trim(page.elements.tempTransfer.val().toString()));
 
         page.commands.addRow = (index) => {
-            page.element.frmListTransfer.prepend($(tempTransfer(index, transfer.senderId, transfer.senderName, transfer.recipientId, transfer.recipientName, transfer.createdOn, transfer.createdAt, transfer.transferAmount, transfer.fees, transfer.feesAmount, transfer.transactionAmount)));
+            page.elements.frmListTransfer.prepend($(tempTransfer(index, transfer.senderId, transfer.senderName, transfer.recipientId, transfer.recipientName, transfer.createdOn, transfer.createdAt, transfer.transferAmount, transfer.fees, transfer.feesAmount, transfer.transactionAmount)));
         }
 
         page.loadData.getAllTransfers = () => {
@@ -132,12 +132,12 @@
 
                 $(".num-comma").number(true, 0, ',', ',');
 
-                page.element.loader.addClass("hide");
+                page.elements.loader.addClass("hide");
 
             }).fail(function() {
-                App.showErrorAlert(App.ERROR_404);
+                App.SweetAlert.showErrorAlert(App.AlertMessageEn.ERROR_404);
             }).always(function () {
-                page.element.loader.addClass("hide");
+                page.elements.loader.addClass("hide");
             });
         }
 
@@ -146,9 +146,9 @@
                 type: "GET",
                 url: page.urls.getSumFeesAmount,
             }).done((data) => {
-                page.element.spSumFeesAmount.text(App.formatNumberSpace(data.amount))
+                page.elements.spSumFeesAmount.text(App.formatNumberSpace(data.amount))
             }).fail(function() {
-                App.showErrorAlert(App.ERROR_404);
+                App.SweetAlert.showErrorAlert(App.AlertMessageEn.ERROR_404);
             });
         }
 
@@ -162,7 +162,7 @@
                 $(".profile-dropdown").hide();
             });
 
-            page.element.logout.on("click", function () {
+            page.elements.logout.on("click", function () {
                 $.removeCookie('JWT', { path: '/', domain: location.hostname });
             });
         }

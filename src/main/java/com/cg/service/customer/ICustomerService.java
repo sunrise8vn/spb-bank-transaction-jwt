@@ -16,9 +16,13 @@ public interface ICustomerService extends IGeneralService<Customer> {
 
     List<CustomerDTO> findAllCustomerDTOByDeletedIsFalse();
 
+    Boolean existsByIdAndDeletedIsFalse(Long id);
+
     Boolean existsByEmail(String email);
 
     Boolean existsByEmailAndIdIsNot(String email, Long id);
+
+    Optional<Customer> findByIdAndDeletedIsFalse(Long id);
 
     List<Customer> findAllByDeletedIsFalse();
 

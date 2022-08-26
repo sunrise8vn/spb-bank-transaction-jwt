@@ -5,11 +5,10 @@ target/
 !**/src/test/**/target/
 
 #/src/main/com/cg/config/AppConfig.java
-/src/main/resources/application_0.yml
-/src/main/resources/application_Azure.properties
-/src/main/resources/application_DigitalOcean.properties
-/src/main/resources/application_Heroku.properties
-src\main\resources\application_Azure.properties
+src/main/resources/application_Azure.yml
+src/main/resources/application_Azure.properties
+src/main/resources/application_DigitalOcean.properties
+src/main/resources/application_Heroku.properties
 
 ### STS ###
 .apt_generated

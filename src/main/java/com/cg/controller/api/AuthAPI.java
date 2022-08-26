@@ -55,10 +55,10 @@ public class AuthAPI {
         if (bindingResult.hasErrors())
             return appUtils.mapErrorToResponse(bindingResult);
 
-        Optional<UserDTO> optUser = userService.findUserDTOByUsername(userDTO.getUsername());
+        Boolean existsByUsername = userService.existsByUsername(userDTO.getUsername());
 
-        if (optUser.isPresent()) {
-            throw new EmailExistsException("Email already exists");
+        if (existsByUsername) {
+            throw new EmailExistsException("Account already exists");
         }
 
         Optional<Role> optRole = roleService.findById(userDTO.getRole().getId());
@@ -79,39 +79,42 @@ public class AuthAPI {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String jwt = jwtService.generateTokenLogin(authentication);
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User currentUser = userService.getByUsername(user.getUsername());
+            String jwt = jwtService.generateTokenLogin(authentication);
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            User currentUser = userService.getByUsername(user.getUsername());
 
-        JwtResponse jwtResponse = new JwtResponse(
-                jwt,
-                currentUser.getId(),
-                userDetails.getUsername(),
-                currentUser.getUsername(),
-                userDetails.getAuthorities()
-        );
+            JwtResponse jwtResponse = new JwtResponse(
+                    jwt,
+                    currentUser.getId(),
+                    userDetails.getUsername(),
+                    currentUser.getUsername(),
+                    userDetails.getAuthorities()
+            );
 
-        ResponseCookie springCookie = ResponseCookie.from("JWT", jwt)
-                .httpOnly(false)
-                .secure(false)
-                .path("/")
-                .maxAge(60 * 1000)
-                .domain("localhost")
-//                .domain("spb-bank-transaction-jwt.herokuapp.com")
-                .build();
+            ResponseCookie springCookie = ResponseCookie.from("JWT", jwt)
+                    .httpOnly(false)
+                    .secure(false)
+                    .path("/")
+                    .maxAge(60 * 1000)
+                    .domain("localhost")
+                    .build();
 
-        System.out.println(jwtResponse);
+            System.out.println(jwtResponse);
 
-        return ResponseEntity
-                .ok()
-                .header(HttpHeaders.SET_COOKIE, springCookie.toString())
-                .body(jwtResponse);
-
+            return ResponseEntity
+                    .ok()
+                    .header(HttpHeaders.SET_COOKIE, springCookie.toString())
+                    .body(jwtResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
     }
 
 }

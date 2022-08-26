@@ -1,8 +1,6 @@
 package com.cg.model;
 
 import lombok.*;
-import lombok.experimental.Accessors;
-
 import javax.persistence.*;
 
 

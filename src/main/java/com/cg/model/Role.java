@@ -1,8 +1,6 @@
 package com.cg.model;
 
 import lombok.*;
-import lombok.experimental.Accessors;
-
 import javax.persistence.*;
 import java.util.List;
 
@@ -20,7 +18,11 @@ public class Role {
     private Long id;
 
     private String code;
-    private String name;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private ERole name;
+//    private String name;
 
     @OneToMany(targetEntity = User.class, fetch = FetchType.EAGER)
     private List<User> users;

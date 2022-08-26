@@ -5,7 +5,6 @@ import com.cg.model.LocationRegion;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
@@ -46,12 +45,13 @@ public class CustomerDTO {
 
 
     public Customer toCustomer() {
-        return new Customer()
-                .setId(id)
-                .setFullName(fullName)
-                .setEmail(email)
-                .setPhone(phone)
-                .setLocationRegion(locationRegion.toLocationRegion())
-                .setBalance(balance);
+        return Customer.builder()
+                .id(id)
+                .fullName(fullName)
+                .email(email)
+                .phone(phone)
+                .locationRegion(locationRegion.toLocationRegion())
+                .balance(balance)
+                .build();
     }
 }

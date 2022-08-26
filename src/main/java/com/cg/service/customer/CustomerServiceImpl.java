@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.StoredProcedureQuery;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +19,9 @@ import java.util.Optional;
 @Service
 @Transactional
 public class CustomerServiceImpl implements ICustomerService {
+
+    @PersistenceContext
+    private EntityManager em;
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -32,6 +38,7 @@ public class CustomerServiceImpl implements ICustomerService {
     @Autowired
     private TransferRepository transferRepository;
 
+
     @Override
     public List<Customer> findAll() {
         return customerRepository.findAll();
@@ -45,6 +52,16 @@ public class CustomerServiceImpl implements ICustomerService {
     @Override
     public Optional<Customer> findById(Long id) {
         return customerRepository.findById(id);
+    }
+
+    @Override
+    public Optional<Customer> findByIdAndDeletedIsFalse(Long id) {
+        return customerRepository.findByIdAndDeletedIsFalse(id);
+    }
+
+    @Override
+    public Boolean existsByIdAndDeletedIsFalse(Long id) {
+        return customerRepository.existsByIdAndDeletedIsFalse(id);
     }
 
     @Override
@@ -162,6 +179,9 @@ public class CustomerServiceImpl implements ICustomerService {
     @Override
     public void reduceBalance(BigDecimal balance, Long id) {
         customerRepository.reduceBalance(balance, id);
+
+        StoredProcedureQuery query = this.em.createNamedStoredProcedureQuery("calculate");
+
     }
 
 }

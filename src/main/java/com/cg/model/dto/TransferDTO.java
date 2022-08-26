@@ -1,7 +1,6 @@
 package com.cg.model.dto;
 
 import com.cg.model.Transfer;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +9,6 @@ import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.util.Date;
 
 
 @Data
@@ -45,13 +43,14 @@ public class TransferDTO {
     }
 
     public Transfer toTransfer(CustomerDTO sender, CustomerDTO recipient) {
-        return new Transfer()
-                .setSender(sender.toCustomer())
-                .setRecipient(recipient.toCustomer())
-                .setTransferAmount(transferAmount)
-                .setFees(fees)
-                .setFeesAmount(feesAmount)
-                .setTransactionAmount(transactionAmount);
+        return Transfer.builder()
+                .sender(sender.toCustomer())
+                .recipient(recipient.toCustomer())
+                .transferAmount(transferAmount)
+                .fees(fees)
+                .feesAmount(feesAmount)
+                .transactionAmount(transactionAmount)
+                .build();
     }
 
 }

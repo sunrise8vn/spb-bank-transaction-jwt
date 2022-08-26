@@ -24,17 +24,17 @@ public class AppConfig {
 //        return new AuditorAwareImpl();
 //    }
 
-//    @Bean
-//    public WebMvcConfigurer corsConfigurer() {
-//        return new WebMvcConfigurerAdapter() {
-//            @Override
-//            public void addCorsMappings(CorsRegistry registry) {
-//                registry.addMapping("/api/**")
-//                        .allowedOrigins("http://localhost:3300", "http://localhost:3330")
-//                        .allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH");
-//            }
-//        };
-//    }
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurerAdapter() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/api/**")
+                        .allowedOrigins("http://localhost:3000", "http://localhost:3300")
+                        .allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH");
+            }
+        };
+    }
 
 //    @Override
 //    public void addCorsMappings(CorsRegistry registry) {

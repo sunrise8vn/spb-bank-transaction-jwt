@@ -1,6 +1,6 @@
 
 $(function () {
-    page.dialogs.element.frmCreateCustomer.validate({
+    page.dialogs.elements.frmCreateCustomer.validate({
         onkeyup: function(element) { $(element).valid() },
         onclick: false,
         onfocusout: false,
@@ -58,7 +58,7 @@ $(function () {
     });
 
 
-    page.dialogs.element.frmUpdateCustomer.validate({
+    page.dialogs.elements.frmUpdateCustomer.validate({
         onkeyup: function(element) {$(element).valid()},
         onclick: false,
         onfocusout: false,
@@ -107,7 +107,7 @@ $(function () {
     });
 
 
-    page.dialogs.element.frmDeposit.validate({
+    page.dialogs.elements.frmDeposit.validate({
         onkeyup: function(element) {$(element).valid()},
         onclick: false,
         onfocusout: false,
@@ -143,7 +143,7 @@ $(function () {
     });
 
 
-    page.dialogs.element.frmWithdraw.validate({
+    page.dialogs.elements.frmWithdraw.validate({
         onkeyup: function(element) {$(element).valid()},
         onclick: false,
         onfocusout: false,
@@ -178,7 +178,7 @@ $(function () {
         }
     });
 
-    page.dialogs.element.frmTransfer.validate({
+    page.dialogs.elements.frmTransfer.validate({
         onkeyup: function(element) {$(element).valid()},
         onclick: false,
         onfocusout: false,

@@ -109,8 +109,13 @@
       <artifactId>springfox-boot-starter</artifactId>
       <version>3.0.0</version>
     </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-autoconfigure</artifactId>
+<!--      <version>1.5.9.RELEASE</version>-->
+    </dependency>
 
-  </dependencies>  
+  </dependencies>
   <build> 
     <plugins> 
       <plugin> 

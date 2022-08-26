@@ -1,11 +1,6 @@
 package com.cg.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.Accessors;
-
+import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
 import java.math.BigDecimal;
@@ -15,6 +10,7 @@ import java.math.BigDecimal;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder(toBuilder = true)
 @Entity
 @Table(name = "transfers")
 public class Transfer extends BaseEntity {
@@ -45,14 +41,5 @@ public class Transfer extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "recipient_id")
     private Customer recipient;
-
-
-    public Transfer(Customer sender, Customer recipient, BigDecimal transferAmount, int fees, BigDecimal transactionAmount) {
-        this.sender = sender;
-        this.recipient = recipient;
-        this.transferAmount = transferAmount;
-        this.fees = fees;
-        this.transactionAmount = transactionAmount;
-    }
 
 }

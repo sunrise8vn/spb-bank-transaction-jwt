@@ -21,9 +21,7 @@ public class UserPrinciple implements UserDetails {
 
     private final Collection<? extends GrantedAuthority> roles;
 
-    public UserPrinciple(Long id,
-                         String username, String password,
-                         Collection<? extends GrantedAuthority> roles) {
+    public UserPrinciple(Long id, String username, String password, Collection<? extends GrantedAuthority> roles) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -61,7 +59,6 @@ public class UserPrinciple implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;
     }
-
 
     @Override
     public boolean isAccountNonExpired() {

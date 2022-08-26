@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<html lang="en">
 <head>
     <title>Login</title>
     <meta charset="UTF-8">
@@ -96,7 +96,7 @@
             register: App.BASE_URL_AUTH + "/register",
             login: App.BASE_URL_AUTH + "/login",
         },
-        element: {},
+        elements: {},
         commands: {}
     }
 
@@ -123,57 +123,57 @@
         }
     ];
 
-    let curIdx = 0;
-    let speed,
+    let curIdx = 0,
+        speed,
         speedUp,
         speedDown;
 
-    page.element.section = $("section");
-    page.element.frmLogin = $("#frmLogin");
-    page.element.usnLogin = $("#usnLogin");
-    page.element.pwdLogin = $("#pwdLogin");
+    page.elements.section = $("section");
+    page.elements.frmLogin = $("#frmLogin");
+    page.elements.usnLogin = $("#usnLogin");
+    page.elements.pwdLogin = $("#pwdLogin");
 
-    page.element.frmRegister = $("#frmRegister");
-    page.element.usnReg = $("#usnReg");
-    page.element.pwdReg = $("#pwdReg");
+    page.elements.frmRegister = $("#frmRegister");
+    page.elements.usnReg = $("#usnReg");
+    page.elements.pwdReg = $("#pwdReg");
 
-    page.element.btnBox = $("#btnBox");
-    page.element.loginBoxBtn = $(".login-box-btn");
-    page.element.registerBoxBtn = $(".register-box-btn");
-    page.element.btnLogin = $("#btnLogin");
-    page.element.btnRegister = $("#btnRegister");
-    page.element.frmRegSelect = $("#frmRegister .role .custom-select");
-    page.element.frmRegSelectSpan = $("#frmRegister .role .custom-select__trigger span");
-    page.element.frmRegOpt = $("#frmRegister .role .custom-option");
-    page.element.frmRegOpts = $("#frmRegister .role .custom-options");
-    page.element.frmResOptWrapper = $("#frmRegister .role .custom-select-wrapper")
+    page.elements.btnBox = $("#btnBox");
+    page.elements.loginBoxBtn = $(".login-box-btn");
+    page.elements.registerBoxBtn = $(".register-box-btn");
+    page.elements.btnLogin = $("#btnLogin");
+    page.elements.btnRegister = $("#btnRegister");
+    page.elements.frmRegSelect = $("#frmRegister .role .custom-select");
+    page.elements.frmRegSelectSpan = $("#frmRegister .role .custom-select__trigger span");
+    page.elements.frmRegOpt = $("#frmRegister .role .custom-option");
+    page.elements.frmRegOpts = $("#frmRegister .role .custom-options");
+    page.elements.frmResOptWrapper = $("#frmRegister .role .custom-select-wrapper")
 
     page.commands.switchLoginForm = () => {
-        page.element.frmLogin.css("left", "50px");
-        page.element.frmRegister.css("left", "450px");
-        page.element.btnBox.css("left", 0);
+        page.elements.frmLogin.css("left", "50px");
+        page.elements.frmRegister.css("left", "450px");
+        page.elements.btnBox.css("left", 0);
 
         setTimeout(function () {
-            page.element.loginBoxBtn.css("color", "#fff");
-            page.element.registerBoxBtn.css("color", "#000");
+            page.elements.loginBoxBtn.css("color", "#fff");
+            page.elements.registerBoxBtn.css("color", "#000");
         }, 100);
     }
 
     page.commands.switchRegisterForm = () => {
-        page.element.frmLogin.css("left", "-400px");
-        page.element.frmRegister.css("left", "50px");
-        page.element.btnBox.css("left", "132px");
+        page.elements.frmLogin.css("left", "-400px");
+        page.elements.frmRegister.css("left", "50px");
+        page.elements.btnBox.css("left", "132px");
 
         setTimeout(function () {
-            page.element.loginBoxBtn.css("color", "#000");
-            page.element.registerBoxBtn.css("color", "#fff");
+            page.elements.loginBoxBtn.css("color", "#000");
+            page.elements.registerBoxBtn.css("color", "#fff");
         }, 100);
     }
 
     page.commands.login = () => {
         let user = {
-            username: page.element.usnLogin.val(),
-            password: page.element.pwdLogin.val()
+            username: page.elements.usnLogin.val(),
+            password: page.elements.pwdLogin.val()
         }
 
         $.ajax({
@@ -185,24 +185,24 @@
             url: page.urls.login,
             data: JSON.stringify(user)
         }).done((resp) => {
-            $.notify("Logged in successfully !", "success");
+            App.Notify.showSuccessAlert("Logged in successfully !");
 
             setTimeout(function () {
                 window.location.href = "/";
             }, 1000);
 
         }).fail(function () {
-            $.notify("The account or password is incorrect, please check the information again", "error");
+            App.Notify.showErrorAlert("The email or password is incorrect, please check the information again");
         });
     }
 
     page.commands.register = () => {
         let user = {
-            username: page.element.usnReg.val(),
-            password: page.element.pwdReg.val(),
+            username: page.elements.usnReg.val(),
+            password: page.elements.pwdReg.val(),
             role: {
-                id: page.element.frmRegOpts.find(".selected").data("value"),
-                code: page.element.frmRegOpts.find(".selected").text()
+                id: page.elements.frmRegOpts.find(".selected").data("value"),
+                code: page.elements.frmRegOpts.find(".selected").text()
             }
         }
 
@@ -215,27 +215,29 @@
             url: page.urls.register,
             data: JSON.stringify(user)
         }).done((resp) => {
-            $.notify("Successful account registration !", "success");
+            App.Notify.showSuccessAlert("Successful account registration !");
 
             setTimeout(function () {
-                page.element.usnLogin.val(page.element.usnReg.val());
-                page.element.pwdLogin.val(page.element.pwdReg.val());
+                page.elements.usnLogin.val(page.elements.usnReg.val());
+                page.elements.pwdLogin.val(page.elements.pwdReg.val());
                 page.commands.switchLoginForm();
             }, 1000);
 
         }).fail(function (jqXHR) {
-            page.element.frmLogin[0].reset();
+            page.elements.frmLogin[0].reset();
 
             if (jqXHR.responseJSON) {
                 if (jqXHR.responseJSON.message) {
-                    $.notify(jqXHR.responseJSON.message, "error");
-                } else {
+                    App.Notify.showErrorAlert(jqXHR.responseJSON.message);
+                }
+                else {
                     $.each(jqXHR.responseJSON, function (key, value) {
-                        $.notify(value, "error");
+                        App.Notify.showErrorAlert(value);
                     });
                 }
-            } else {
-                $.notify("Something went wrong, please try again", "error");
+            }
+            else {
+                App.Notify.showErrorAlert("Something went wrong, please try again");
             }
         });
     }
@@ -249,13 +251,13 @@
 
             if(e.keyCode === 67) {
                 if ($("img.plane").width() === 250) {
+
+                    $("section img.plane").attr("src","assets/images/plane/" + arrPlane[curIdx].code + ".png");
+                    App.Notify.showSuccessAlert(arrPlane[curIdx].name + " ready to take off");
+
                     if (curIdx === arrPlane.length - 1) {
-                        $("section img.plane").attr("src","assets/images/plane/" + arrPlane[curIdx].code + ".png");
-                        $.notify(arrPlane[curIdx].name + " ready to take off", "success");
                         curIdx = 0;
                     } else {
-                        $("section img.plane").attr("src","assets/images/plane/" + arrPlane[curIdx].code + ".png");
-                        $.notify(arrPlane[curIdx].name + " ready to take off", "success");
                         curIdx++;
                     }
                 }
@@ -264,7 +266,7 @@
     }
 
     page.commands.speedHandle = () => {
-        page.element.section.on('mousedown touchstart', function(e) {
+        page.elements.section.on('mousedown touchstart', function(e) {
 
             if (!speedUp) {
                 speedUp = setInterval(function(){
@@ -282,7 +284,7 @@
 
         });
 
-        page.element.section.on('mouseup mouseleave touchend', function(e) {
+        page.elements.section.on('mouseup mouseleave touchend', function(e) {
 
             if (!speedDown) {
                 speedDown = setInterval(function(){
@@ -303,32 +305,32 @@
 
     page.initializeControlEvent = () => {
 
-        page.element.loginBoxBtn.on("click", function () {
+        page.elements.loginBoxBtn.on("click", function () {
             page.commands.switchLoginForm();
         });
 
-        page.element.registerBoxBtn.on("click", function () {
+        page.elements.registerBoxBtn.on("click", function () {
             page.commands.switchRegisterForm();
         });
 
-        page.element.frmRegOpt.on("click", function () {
+        page.elements.frmRegOpt.on("click", function () {
             let role_name = $(this).html();
-            page.element.frmRegSelectSpan.html(role_name);
-            page.element.frmRegOpts.find(".selected").removeClass("selected");
+            page.elements.frmRegSelectSpan.html(role_name);
+            page.elements.frmRegOpts.find(".selected").removeClass("selected");
             $(this).addClass("selected");
         });
 
-        page.element.btnLogin.on("click", function () {
+        page.elements.btnLogin.on("click", function () {
             page.commands.login();
         });
 
-        page.element.btnRegister.on("click", function () {
+        page.elements.btnRegister.on("click", function () {
             page.commands.register();
         });
 
-        page.element.frmResOptWrapper.on("click", function (event) {
+        page.elements.frmResOptWrapper.on("click", function (event) {
             event.stopPropagation();
-            page.element.frmRegSelect.toggleClass("open");
+            page.elements.frmRegSelect.toggleClass("open");
         });
 
         $('input').iCheck({
@@ -338,7 +340,7 @@
         });
 
         $(document).on("click", function () {
-            page.element.frmRegSelect.removeClass("open");
+            page.elements.frmRegSelect.removeClass("open");
         });
 
         $(".tooltip .airplane").on("click", function () {
@@ -351,7 +353,7 @@
         page.commands.speedHandle();
     }
 
-    $(function () {
+    $(() => {
         page.initializeControlEvent();
     });
 

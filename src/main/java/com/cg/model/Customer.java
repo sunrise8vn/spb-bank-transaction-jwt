@@ -1,15 +1,7 @@
 package com.cg.model;
 
 import com.cg.model.dto.CustomerDTO;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.Accessors;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.LastModifiedBy;
-
+import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
 import java.math.BigDecimal;
@@ -19,6 +11,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder(toBuilder = true)
 @Entity
 @Table(name = "customers")
 public class Customer extends BaseEntity {
@@ -34,7 +27,7 @@ public class Customer extends BaseEntity {
 
     private String phone;
 
-    @Digits(integer = 14, fraction = 2)
+    @Digits(integer = 12, fraction = 0)
     @Column(updatable = false)
     private BigDecimal balance;
 

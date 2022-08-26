@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -112,7 +113,7 @@ public class CustomerAPI {
 
 
     @PostMapping
-    public ResponseEntity<?> createCustomer(@Valid @RequestBody CustomerDTO customerDTO, BindingResult bindingResult) {
+    public ResponseEntity<?> createCustomer(@Validated @RequestBody CustomerDTO customerDTO, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors())
             return appUtils.mapErrorToResponse(bindingResult);
@@ -259,10 +260,12 @@ public class CustomerAPI {
         }
     }
 
-    @DeleteMapping("/suspend/{id}")
+    @DeleteMapping("/deactivate/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public ResponseEntity<?> doSuspend(@PathVariable Long id) {
-        Optional<Customer> customer = customerService.findById(id);
+    public ResponseEntity<?> doDeactivate(@PathVariable Long id) {
+//        Optional<Customer> customer = customerService.findById(id);
+
+        Optional<Customer> customer = customerService.findByIdAndDeletedIsFalse(id);
 
         if (customer.isPresent()) {
             try {

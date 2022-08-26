@@ -57,6 +57,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
+        String path = request.getRequestURI();
+        if ("/api/auth/login".equals(path)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         try {
             String bearerToken = getBearerTokenRequest(request);
             String authorizationCookie = getCookieValue(request);
